@@ -1,0 +1,40 @@
+USE master;
+GO
+
+IF NOT EXISTS (
+    SELECT name
+FROM sys.databases
+WHERE name = N'DWH_ONPREM'
+)  
+BEGIN
+    CREATE DATABASE DWH_ONPREM;
+END
+GO
+
+USE DWH_ONPREM;
+GO
+
+IF NOT EXISTS (
+    SELECT *
+FROM sys.schemas
+WHERE name = N'STG'
+)
+EXEC('CREATE SCHEMA STG');
+GO
+
+IF NOT EXISTS (
+    SELECT *
+FROM sys.schemas
+WHERE name = N'INT'
+)
+EXEC('CREATE SCHEMA INT');
+GO
+
+IF NOT EXISTS (
+    SELECT *
+FROM sys.schemas
+WHERE name = N'MRT'
+)
+EXEC('CREATE SCHEMA MRT');
+GO
+
