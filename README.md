@@ -13,24 +13,24 @@ config:
   securityLevel: 'loose'
 ---
 flowchart TD
-    subgraph Docker["<i class='fab fa-docker'></i> Docker"]
-        subgraph Container_SQL_Server_AdventureWorks["<i class="fa-solid fa-server"></i> SQL Server - AdventureWorks"]
+    subgraph Docker["🐋Docker"]
+        subgraph Container_SQL_Server_AdventureWorks["🗄️SQL Server - AdventureWorks"]
             sourcetables["<i class='fa-solid fa-table'></i> Source Tables"]
         end
-        subgraph Container_SQL_Server_OnPrem["<i class="fa-solid fa-server"></i> SQL Server - DWH_OnPrem"]
-            stagingtables["<i class='fa-solid fa-table'></i> Staging TABLES"]
-            intviews["<i class='fa-regular fa-eye'></i> Intermediate VIEWS"]
-            slowdimensions["<i class='fa-solid fa-table'></i> Slow-Changing Dimension SCD Type2 TABLES"]
-            normdimensions["<i class='fa-solid fa-table'></i> Slow-Changing Dimension SCD Type 1 TABLES"]
-            facts["<i class='fa-solid fa-table'></i> Denormalised Fact TABLES"]
+        subgraph Container_SQL_Server_OnPrem["🗄️SQL Server - DWH_OnPrem"]
+            stagingtables["📦Staging TABLES"]
+            intviews["👁️Intermediate VIEWS"]
+            slowdimensions["📦🕑Slow-Changing Dimension SCD Type2 TABLES"]
+            normdimensions["📦Slow-Changing Dimension SCD Type 1 TABLES"]
+            facts["📦📊Denormalised Fact TABLES"]
         end
     end
 
     %% Main flows per table
     sourcetables--SSIS--> stagingtables
     stagingtables--> intviews
-    intviews--Stored Procedures--> slowdimensions
-    intviews--Stored Procedures--> normdimensions
-    intviews--Stored Procedures--> facts
-    slowdimensions--Stored Procedures-->facts
-    normdimensions--Stored Procedures-->facts
+    intviews--⚡Stored Procedures--> slowdimensions
+    intviews--⚡Stored Procedures--> normdimensions
+    intviews--⚡Stored Procedures--> facts
+    slowdimensions--⚡Stored Procedures-->facts
+    normdimensions--⚡Stored Procedures-->facts
