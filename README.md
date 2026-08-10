@@ -20,7 +20,8 @@ flowchart TD
         subgraph Container_SQL_Server_OnPrem["<i class="fa-solid fa-server"></i> SQL Server - DWH_OnPrem"]
             stagingtables["<i class='fa-solid fa-table'></i> Staging TABLES"]
             intviews["<i class='fa-regular fa-eye'></i> Intermediate VIEWS"]
-            dimensions["<i class='fa-solid fa-table'></i> Slow-Changing Dimension TABLES"]
+            slowdimensions["<i class='fa-solid fa-table'></i> Slow-Changing Dimension SCD Type2 TABLES"]
+            normdimensions["<i class='fa-solid fa-table'></i> Slow-Changing Dimension SCD Type 1 TABLES"]
             facts["<i class='fa-solid fa-table'></i> Denormalised Fact TABLES"]
         end
     end
@@ -28,6 +29,8 @@ flowchart TD
     %% Main flows per table
     sourcetables--SSIS--> stagingtables
     stagingtables--> intviews
-    intviews--Stored Procedures--> dimensions
+    intviews--Stored Procedures--> slowdimensions
+    intviews--Stored Procedures--> normdimensions
     intviews--Stored Procedures--> facts
-    dimensions--Stored Procedures-->facts
+    slowdimensions--Stored Procedures-->facts
+    normdimensions--Stored Procedures-->facts
