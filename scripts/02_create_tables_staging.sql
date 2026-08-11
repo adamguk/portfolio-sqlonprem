@@ -6,7 +6,7 @@ IF OBJECT_ID (N'STG.Person_Address', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_Address
     (
-        [AddressID] INT  NOT NULL,
+        [AddressID] INT NOT NULL,
         [AddressLine1] NVARCHAR(60) NULL,
         [AddressLine2] NVARCHAR(60) NULL,
         [City] NVARCHAR(30) NULL,
@@ -24,7 +24,7 @@ IF OBJECT_ID (N'STG.Person_AddressType', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_AddressType
     (
-        [AddressTypeID] INT  NOT NULL,
+        [AddressTypeID] INT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE (),
@@ -37,7 +37,7 @@ IF OBJECT_ID (N'STG.Production_BillOfMaterials', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_BillOfMaterials
     (
-        [BillOfMaterialsID] INT  NOT NULL,
+        [BillOfMaterialsID] INT NOT NULL,
         [ProductAssemblyID] INT NULL,
         [ComponentID] INT NOT NULL,
         [StartDate] DATETIME2 NOT NULL,
@@ -56,7 +56,7 @@ IF OBJECT_ID (N'STG.Person_BusinessEntity', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_BusinessEntity
     (
-        [BusinessEntityID] INT  NOT NULL,
+        [BusinessEntityID] INT NOT NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE (),
         RowHash VARBINARY(32) NULL
@@ -96,7 +96,7 @@ IF OBJECT_ID (N'STG.Person_ContactType', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_ContactType
     (
-        [ContactTypeID] INT  NOT NULL,
+        [ContactTypeID] INT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE (),
@@ -109,7 +109,7 @@ IF OBJECT_ID (N'STG.Person_CountryRegion', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_CountryRegion
     (
-        [CountryRegionCode] NVARCHAR(3)  NOT NULL,
+        [CountryRegionCode] NVARCHAR(3) NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE (),
@@ -135,7 +135,7 @@ IF OBJECT_ID (N'STG.Sales_CreditCard', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_CreditCard
     (
-        [CreditCardID] INT  NOT NULL,
+        [CreditCardID] INT NOT NULL,
         [CardType] NVARCHAR(50) NULL,
         [CardNumber] NVARCHAR(25) NULL,
         [ExpMonth] TINYINT NULL,
@@ -151,7 +151,7 @@ IF OBJECT_ID (N'STG.Production_Culture', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_Culture
     (
-        [CultureID] nchar(6)  NOT NULL,
+        [CultureID] nchar(6) NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE (),
@@ -164,7 +164,7 @@ IF OBJECT_ID (N'STG.Sales_Currency', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_Currency
     (
-        [CurrencyCode] nchar(3)  NOT NULL,
+        [CurrencyCode] nchar(3) NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE (),
@@ -177,7 +177,7 @@ IF OBJECT_ID (N'STG.Sales_CurrencyRate', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_CurrencyRate
     (
-        [CurrencyRateID] INT  NOT NULL,
+        [CurrencyRateID] INT NOT NULL,
         [CurrencyRateDate] DATETIME2 NULL,
         [FromCurrencyCode] nchar(3) NULL,
         [ToCurrencyCode] nchar(3) NULL,
@@ -194,7 +194,7 @@ IF OBJECT_ID (N'STG.Sales_Customer', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_Customer
     (
-        [CustomerID] INT  NOT NULL,
+        [CustomerID] INT NOT NULL,
         [PersonID] INT NULL,
         [StoreID] INT NULL,
         [TerritoryID] INT NULL,
@@ -210,7 +210,7 @@ IF OBJECT_ID (N'STG.HumanResources_Department', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.HumanResources_Department
     (
-        [DepartmentID] SMALLINT  NOT NULL,
+        [DepartmentID] SMALLINT NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [GroupName] NVARCHAR(50) NULL,
         [ModifiedDate] DATETIME2 NULL,
@@ -224,7 +224,7 @@ IF OBJECT_ID (N'STG.Production_Document', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_Document
     (
-        [DocumentNode] hierarchyid  NOT NULL,
+        [DocumentNode] hierarchyid NOT NULL,
         [DocumentLevel] SMALLINT NULL,
         [Title] NVARCHAR(50) NULL,
         [Owner] INT NULL,
@@ -261,7 +261,7 @@ IF OBJECT_ID (N'STG.HumanResources_Employee', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.HumanResources_Employee
     (
-        [BusinessEntityID] INT  NOT NULL,
+        [BusinessEntityID] INT NOT NULL,
         [NationalIDNumber] NVARCHAR(15) NOT NULL,
         [LoginID] NVARCHAR(256) NOT NULL,
         [OrganizationNode] HIERARCHYID NULL,
@@ -318,7 +318,7 @@ IF OBJECT_ID (N'STG.Production_Illustration', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_Illustration
     (
-        [IllustrationID] INT  NOT NULL,
+        [IllustrationID] INT NOT NULL,
         [Diagram] XML NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
@@ -331,7 +331,7 @@ IF OBJECT_ID (N'STG.HumanResources_JobCandidate', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.HumanResources_JobCandidate
     (
-        [JobCandidateID] INT  NOT NULL,
+        [JobCandidateID] INT NOT NULL,
         [BusinessEntityID] INT NULL,
         [Resume] XML NULL,
         [ModifiedDate] DATETIME2 NULL,
@@ -345,7 +345,7 @@ IF OBJECT_ID (N'STG.Production_Location', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_Location
     (
-        [LocationID] SMALLINT  NOT NULL,
+        [LocationID] SMALLINT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [CostRate] smallmoney NOT NULL,
         [Availability] decimal(8, 2) NOT NULL,
@@ -360,7 +360,7 @@ IF OBJECT_ID (N'STG.Person_Password', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_Password
     (
-        [BusinessEntityID] INT  NOT NULL,
+        [BusinessEntityID] INT NOT NULL,
         [PasswordHash] varchar(128) NOT NULL,
         [PasswordSalt] varchar(10) NOT NULL,
         [ModifiedDate] DATETIME2 NULL,
@@ -374,7 +374,7 @@ IF OBJECT_ID (N'STG.Person_Person', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_Person
     (
-        [BusinessEntityID] INT  NOT NULL,
+        [BusinessEntityID] INT NOT NULL,
         [PersonType] NCHAR(2) NULL,
         [NameStyle] BIT NULL,
         [Title] NVARCHAR(8) NULL,
@@ -424,7 +424,7 @@ IF OBJECT_ID (N'STG.Person_PhoneNumberType', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_PhoneNumberType
     (
-        [PhoneNumberTypeID] INT  NOT NULL,
+        [PhoneNumberTypeID] INT NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
@@ -437,7 +437,7 @@ IF OBJECT_ID (N'STG.Production_Product', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_Product
     (
-        [ProductID] INT  NOT NULL,
+        [ProductID] INT NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [ProductNumber] NVARCHAR(25) NULL,
         [MakeFlag] BIT NULL,
@@ -461,8 +461,7 @@ BEGIN
         [SellEndDate] DATETIME2 NULL,
         [DiscontinuedDate] DATETIME2 NULL,
         [ModifiedDate] DATETIME2 NOT NULL,
-        ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
-        RowHash VARBINARY(32) NULL
+        ExtractDatetime DATETIME2 NULL DEFAULT GETDATE()
     )
 END;
 GO
@@ -471,7 +470,7 @@ IF OBJECT_ID (N'STG.Production_ProductCategory', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_ProductCategory
     (
-        [ProductCategoryID] INT  NOT NULL,
+        [ProductCategoryID] INT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
@@ -499,7 +498,7 @@ IF OBJECT_ID (N'STG.Production_ProductDescription', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_ProductDescription
     (
-        [ProductDescriptionID] INT  NOT NULL,
+        [ProductDescriptionID] INT NOT NULL,
         [Description] NVARCHAR(400) NOT NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
@@ -512,7 +511,7 @@ IF OBJECT_ID (N'STG.Production_ProductDocument', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_ProductDocument
     (
-        [ProductID] INT  NOT NULL,
+        [ProductID] INT NOT NULL,
         [DocumentNode] hierarchyid NOT NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
@@ -556,7 +555,7 @@ IF OBJECT_ID (N'STG.Production_ProductModel', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_ProductModel
     (
-        [ProductModelID] INT  NOT NULL,
+        [ProductModelID] INT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [CatalogDescription] XML NULL,
         [Instructions] XML NULL,
@@ -598,7 +597,7 @@ IF OBJECT_ID (N'STG.Production_ProductPhoto', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_ProductPhoto
     (
-        [ProductPhotoID] INT  NOT NULL,
+        [ProductPhotoID] INT NOT NULL,
         [ThumbNailPhoto] varbinary(MAX) NULL,
         [ThumbnailPhotoFileName] NVARCHAR(50) NULL,
         [LargePhoto] varbinary(MAX) NULL,
@@ -627,7 +626,7 @@ IF OBJECT_ID (N'STG.Production_ProductReview', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_ProductReview
     (
-        [ProductReviewID] INT  NOT NULL,
+        [ProductReviewID] INT NOT NULL,
         [ProductID] INT NOT NULL,
         [ReviewerName] NVARCHAR(50) NOT NULL,
         [ReviewDate] DATETIME2 NOT NULL,
@@ -645,7 +644,7 @@ IF OBJECT_ID (N'STG.Production_ProductSubcategory', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_ProductSubcategory
     (
-        [ProductSubcategoryID] INT  NOT NULL,
+        [ProductSubcategoryID] INT NOT NULL,
         [ProductCategoryID] INT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [ModifiedDate] DATETIME2 NULL,
@@ -701,7 +700,7 @@ IF OBJECT_ID (N'STG.Purchasing_PurchaseOrderHeader', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Purchasing_PurchaseOrderHeader
     (
-        [PurchaseOrderID] INT  NOT NULL,
+        [PurchaseOrderID] INT NOT NULL,
         [RevisionNumber] TINYINT NULL,
         [Status] TINYINT NULL,
         [EmployeeID] INT NULL,
@@ -744,7 +743,7 @@ IF OBJECT_ID (N'STG.Sales_SalesOrderHeader', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_SalesOrderHeader
     (
-        [SalesOrderID] INT  NOT NULL,
+        [SalesOrderID] INT NOT NULL,
         [RevisionNumber] TINYINT NULL,
         [OrderDate] DATETIME2 NULL,
         [DueDate] DATETIME2 NULL,
@@ -792,7 +791,7 @@ IF OBJECT_ID (N'STG.Sales_SalesPerson', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_SalesPerson
     (
-        [BusinessEntityID] INT  NOT NULL,
+        [BusinessEntityID] INT NOT NULL,
         [TerritoryID] INT NULL,
         [SalesQuota] MONEY NULL,
         [Bonus] MONEY NULL,
@@ -824,7 +823,7 @@ IF OBJECT_ID (N'STG.Sales_SalesReason', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_SalesReason
     (
-        [SalesReasonID] INT  NOT NULL,
+        [SalesReasonID] INT NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [ReasonType] NVARCHAR(50) NULL,
         [ModifiedDate] DATETIME2 NULL,
@@ -838,7 +837,7 @@ IF OBJECT_ID (N'STG.Sales_SalesTaxRate', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_SalesTaxRate
     (
-        [SalesTaxRateID] INT  NOT NULL,
+        [SalesTaxRateID] INT NOT NULL,
         [StateProvinceID] INT NULL,
         [TaxType] TINYINT NULL,
         [TaxRate] smallmoney NULL,
@@ -854,7 +853,7 @@ IF OBJECT_ID (N'STG.Sales_SalesTerritory', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_SalesTerritory
     (
-        [TerritoryID] INT  NOT NULL,
+        [TerritoryID] INT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [CountryRegionCode] NVARCHAR(3) NOT NULL,
         [Group] NVARCHAR(50) NOT NULL,
@@ -889,7 +888,7 @@ IF OBJECT_ID (N'STG.Production_ScrapReason', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_ScrapReason
     (
-        [ScrapReasonID] SMALLINT  NOT NULL,
+        [ScrapReasonID] SMALLINT NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
@@ -902,7 +901,7 @@ IF OBJECT_ID (N'STG.HumanResources_Shift', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.HumanResources_Shift
     (
-        [ShiftID] TINYINT  NOT NULL,
+        [ShiftID] TINYINT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [StartTime] time NOT NULL,
         [EndTime] time NOT NULL,
@@ -917,7 +916,7 @@ IF OBJECT_ID (N'STG.Purchasing_ShipMethod', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Purchasing_ShipMethod
     (
-        [ShipMethodID] INT  NOT NULL,
+        [ShipMethodID] INT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [ShipBase] MONEY NOT NULL,
         [ShipRate] MONEY NOT NULL,
@@ -932,7 +931,7 @@ IF OBJECT_ID (N'STG.Sales_ShoppingCartItem', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_ShoppingCartItem
     (
-        [ShoppingCartItemID] INT  NOT NULL,
+        [ShoppingCartItemID] INT NOT NULL,
         [ShoppingCartID] NVARCHAR(50) NOT NULL,
         [Quantity] INT NULL,
         [ProductID] INT NULL,
@@ -948,7 +947,7 @@ IF OBJECT_ID (N'STG.Sales_SpecialOffer', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_SpecialOffer
     (
-        [SpecialOfferID] INT  NOT NULL,
+        [SpecialOfferID] INT NOT NULL,
         [Description] NVARCHAR(255) NOT NULL,
         [DiscountPct] smallmoney NOT NULL,
         [Type] NVARCHAR(50) NOT NULL,
@@ -981,7 +980,7 @@ IF OBJECT_ID (N'STG.Person_StateProvince', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Person_StateProvince
     (
-        [StateProvinceID] INT  NOT NULL,
+        [StateProvinceID] INT NOT NULL,
         [StateProvinceCode] nchar(3) NOT NULL,
         [CountryRegionCode] NVARCHAR(3) NOT NULL,
         [IsOnlyStateProvinceFlag] BIT NULL,
@@ -998,7 +997,7 @@ IF OBJECT_ID (N'STG.Sales_Store', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Sales_Store
     (
-        [BusinessEntityID] INT  NOT NULL,
+        [BusinessEntityID] INT NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
         [SalesPersonID] INT NULL,
         [Demographics] XML NULL,
@@ -1013,7 +1012,7 @@ IF OBJECT_ID (N'STG.Production_TransactionHistory', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_TransactionHistory
     (
-        [TransactionID] INT  NOT NULL,
+        [TransactionID] INT NOT NULL,
         [ProductID] INT NULL,
         [ReferenceOrderID] INT NULL,
         [ReferenceOrderLineID] INT NULL,
@@ -1032,7 +1031,7 @@ IF OBJECT_ID (N'STG.Production_TransactionHistoryArchive', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_TransactionHistoryArchive
     (
-        [TransactionID] INT  NOT NULL,
+        [TransactionID] INT NOT NULL,
         [ProductID] INT NOT NULL,
         [ReferenceOrderID] INT NOT NULL,
         [ReferenceOrderLineID] INT NULL,
@@ -1051,7 +1050,7 @@ IF OBJECT_ID (N'STG.Production_UnitMeasure', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_UnitMeasure
     (
-        [UnitMeasureCode] NCHAR(3)  NOT NULL,
+        [UnitMeasureCode] NCHAR(3) NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [ModifiedDate] DATETIME2 NULL,
         ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
@@ -1064,7 +1063,7 @@ IF OBJECT_ID (N'STG.Purchasing_Vendor', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Purchasing_Vendor
     (
-        [BusinessEntityID] INT  NOT NULL,
+        [BusinessEntityID] INT NOT NULL,
         [AccountNumber] NVARCHAR(15) NOT NULL,
         [Name] NVARCHAR(50) NULL,
         [CreditRating] TINYINT NOT NULL,
@@ -1082,7 +1081,7 @@ IF OBJECT_ID (N'STG.Production_WorkOrder', N'U') IS NULL
 BEGIN
     CREATE TABLE STG.Production_WorkOrder
     (
-        [WorkOrderID] INT  NOT NULL,
+        [WorkOrderID] INT NOT NULL,
         [ProductID] INT NULL,
         [OrderQty] INT NULL,
         [StockedQty] INT NULL,
