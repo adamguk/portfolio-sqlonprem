@@ -278,7 +278,7 @@ BEGIN
             dim.ModifiedDate = src.ModifiedDate,
             dim.ExtractDatetime = src.ExtractDatetime
         FROM MRT.Dim_Product dim
-        JOIN INT.Production_Product src
+        INNER JOIN INT.Production_Product src
         ON dim.ProductNK = src.ProductNK
             WHERE dim.Valid = 1
             COMMIT TRANSACTION;
@@ -290,5 +290,189 @@ BEGIN
         THROW; 
     END CATCH
 
+END;
+GO
+
+CREATE OR ALTER PROCEDURE MRT.USP_LOAD_FACT_SALES
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION
+            --UPDATE existing records
+            UPDATE fct
+            SET
+                fct.ProductSK = p.ProductSK,
+                fct.SpecialOfferNK = src.SpecialOfferNK,
+                fct.BillToAddressNK = src.BillToAddressNK,
+                fct.ShipToAddressNK = src.ShipToAddressNK,
+                fct.ShipMethodNK = src.ShipMethodNK,
+                fct.CreditCardNK = src.CreditCardNK,
+                fct.CustomerNK = src.CustomerNK,
+                fct.SalesPersonNK = src.SalesPersonNK,
+                fct.TerritoryNK = src.TerritoryNK,
+                fct.CurrencyRateNK = src.CurrencyRateNK,
+
+                --Header
+                fct.RevisionNumber = src.RevisionNumber,
+                fct.OrderDate = src.OrderDate,
+                fct.DueDate = src.DueDate,
+                fct.ShipDate = src.ShipDate,
+                fct.StatusDescription = src.StatusDescription,
+                fct.OnlineOrderFlag = src.OnlineOrderFlag,
+                fct.OnlineOrderDescription = src.OnlineOrderDescription,
+                fct.SalesOrderNumber = src.SalesOrderNumber,
+                fct.PurchaseOrderNumber = src.PurchaseOrderNumber,
+                fct.AccountNumber = src.AccountNumber,
+                fct.CreditCardApprovalCode = src.CreditCardApprovalCode,
+                fct.SubTotal = src.SubTotal,
+                fct.TaxAmt = src.TaxAmt,
+                fct.Freight = src.Freight,
+                fct.TotalDue = src.TotalDue,
+                fct.Comment = src.Comment,
+
+                --Detail
+                fct.CarrierTrackingNumber = src.CarrierTrackingNumber,
+                fct.OrderQty = src.OrderQty,
+                fct.UnitPrice = src.UnitPrice,
+                fct.UnitPriceDiscount = src.UnitPriceDiscount,
+                fct.LineTotal = src.LineTotal,
+
+                --Metadata
+                fct.HeaderLastModifiedDate = src.HeaderLastModifiedDate,
+                fct.DetailLastModifiedDate = src.DetailLastModifiedDate,
+                fct.SalesOrderHeaderExtractedDateTime = src.SalesOrderHeaderExtractedDateTime,
+                fct.SalesOrderDetailExtractedDateTime = src.SalesOrderDetailExtractedDateTime,
+                fct.SalesOrderHeaderHash = src.SalesOrderHeaderHash,
+                fct.SalesOrderDetailHash = src.SalesOrderDetailHash,
+                fct.FactSalesHash = src.FactSalesHash
+            FROM MRT.Fact_Sales fct
+        INNER JOIN INT.FactSales src
+        ON fct.SalesOrderDetailNK = src.SalesOrderDetailNK
+
+        LEFT JOIN MRT.Dim_Product p
+        ON src.ProductNK = p.ProductNK
+            AND src.OrderDate >= p.ValidFrom
+            AND (src.OrderDate < p.ValidTo OR p.ValidTo IS NULL)
+        
+        WHERE fct.FactSalesHash <> src.FactSalesHash;
+
+            --INSERT new records
+        INSERT INTO MRT.Fact_Sales
+        (
+        SalesOrderNK,
+        SalesOrderDetailNK,
+        ProductSK,
+        SpecialOfferNK,
+        BillToAddressNK,
+        ShipToAddressNK,
+        ShipMethodNK,
+        CreditCardNK,
+        CustomerNK,
+        SalesPersonNK,
+        TerritoryNK,
+        CurrencyRateNK,
+
+        --Header
+        RevisionNumber,
+        OrderDate,
+        DueDate,
+        ShipDate,
+        StatusDescription,
+        OnlineOrderFlag,
+        OnlineOrderDescription,
+        SalesOrderNumber,
+        PurchaseOrderNumber,
+        AccountNumber,
+        CreditCardApprovalCode,
+        SubTotal,
+        TaxAmt,
+        Freight,
+        TotalDue,
+        Comment,
+
+        --Detail
+        CarrierTrackingNumber,
+        OrderQty,
+        UnitPrice,
+        UnitPriceDiscount,
+        LineTotal,
+
+        --Metadata
+        HeaderLastModifiedDate,
+        DetailLastModifiedDate,
+        SalesOrderHeaderExtractedDateTime,
+        SalesOrderDetailExtractedDateTime,
+        SalesOrderHeaderHash,
+        SalesOrderDetailHash,
+        FactSalesHash
+        )
+    SELECT
+        src.SalesOrderNK,
+        src.SalesOrderDetailNK,
+        p.ProductSK,
+        src.SpecialOfferNK,
+        src.BillToAddressNK,
+        src.ShipToAddressNK,
+        src.ShipMethodNK,
+        src.CreditCardNK,
+        src.CustomerNK,
+        src.SalesPersonNK,
+        src.TerritoryNK,
+        src.CurrencyRateNK,
+
+        --Header
+        src.RevisionNumber,
+        src.OrderDate,
+        src.DueDate,
+        src.ShipDate,
+        src.StatusDescription,
+        src.OnlineOrderFlag,
+        src.OnlineOrderDescription,
+        src.SalesOrderNumber,
+        src.PurchaseOrderNumber,
+        src.AccountNumber,
+        src.CreditCardApprovalCode,
+        src.SubTotal,
+        src.TaxAmt,
+        src.Freight,
+        src.TotalDue,
+        src.Comment,
+
+        --Detail
+        src.CarrierTrackingNumber,
+        src.OrderQty,
+        src.UnitPrice,
+        src.UnitPriceDiscount,
+        src.LineTotal,
+
+        --Metadata
+        src.HeaderLastModifiedDate,
+        src.DetailLastModifiedDate,
+        src.SalesOrderHeaderExtractedDateTime,
+        src.SalesOrderDetailExtractedDateTime,
+        src.SalesOrderHeaderHash,
+        src.SalesOrderDetailHash,
+        src.FactSalesHash
+    FROM INT.FactSales src
+        LEFT JOIN MRT.Fact_Sales fct
+        ON src.SalesOrderDetailNK = fct.SalesOrderDetailNK
+
+        LEFT JOIN MRT.Dim_Product p
+        ON src.ProductNK = p.ProductNK
+            AND src.OrderDate >= p.ValidFrom
+            AND (src.OrderDate < p.ValidTo OR p.ValidTo IS NULL)
+
+    WHERE fct.FactSalesSK IS NULL;
+            COMMIT TRANSACTION;
+            END TRY
+
+        BEGIN CATCH 
+        IF @@TRANCOUNT > 0 
+            ROLLBACK TRANSACTION;
+        THROW; 
+        END CATCH
 END;
 GO

@@ -48,6 +48,17 @@ EXECUTE sp_add_jobstep
     @on_fail_action = 2,
     @flags = 6;
 
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.FCT_Sales',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_FACT_SALES',
+    @rety_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+
 EXECUTE dbo.sp_add_schedule
     @schedule_name = N'RunDaily',
     @freq_type = 4,

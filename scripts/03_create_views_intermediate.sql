@@ -61,7 +61,7 @@ AS
             COALESCE(e.EmailAddress, ''),
             CAST(COALESCE(p.EmailPromotion, 0) AS VARCHAR(10))
         )) AS RowHash
-        
+
     FROM STG.Person_Person p
         LEFT JOIN INT.Person_EmailAddress e
         ON e.PersonNK = p.BusinessEntityID;
@@ -94,17 +94,6 @@ AS
     FROM STG.Person_AddressType;
 GO
 
-CREATE OR ALTER VIEW INT.Person_BusinessEntity
-AS
-    SELECT
-        BusinessEntityID as PersonNK,
-        ModifiedDate,
-        ExtractDatetime,
-        RowHash
-    FROM STG.Person_BusinessEntity;
-GO
-
-
 CREATE OR ALTER VIEW INT.Person_BusinessEntityAddress
 AS
     SELECT
@@ -116,30 +105,6 @@ AS
         ExtractDatetime,
         RowHash
     FROM STG.Person_BusinessEntityAddress;
-GO
-
-CREATE OR ALTER VIEW INT.Person_BusinessEntityContact
-AS
-    SELECT
-        BusinessEntityID AS CompanyNK,
-        PersonID AS PersonNK ,
-        ContactTypeID AS ContactTypeNK,
-        CONCAT(BusinessEntityID,'-',PersonID,'-',ContactTypeID) AS BusinessEntityContactCNK,
-        ModifiedDate,
-        ExtractDatetime,
-        RowHash
-    FROM STG.Person_BusinessEntityContact;
-GO
-
-CREATE OR ALTER VIEW INT.Person_ContactType
-AS
-    SELECT
-        ContactTypeID AS ContactTypeNK,
-        Name,
-        ModifiedDate,
-        ExtractDatetime,
-        RowHash
-    FROM STG.Person_ContactType;
 GO
 
 CREATE OR ALTER VIEW INT.Person_CountryRegion
@@ -164,42 +129,6 @@ AS
         ExtractDatetime,
         RowHash
     FROM STG.Person_EmailAddress;
-GO
-
-CREATE OR ALTER VIEW INT.Person_Password
-AS
-    SELECT
-        BusinessEntityID AS PersonNK,
-        PasswordHash,
-        PasswordSalt,
-        ModifiedDate,
-        ExtractDatetime,
-        RowHash
-    FROM STG.Person_Password;
-GO
-
-CREATE OR ALTER VIEW INT.Person_PersonPhone
-AS
-    SELECT
-        BusinessEntityID AS PersonNK,
-        PhoneNumber,
-        PhoneNumberTypeID AS PhoneNumberTypeNK,
-        CONCAT(BusinessEntityID,'-', PhoneNumberTypeID,'-', PhoneNumber) AS PersonPhoneCNK,
-        ModifiedDate,
-        ExtractDatetime,
-        RowHash
-    FROM STG.Person_PersonPhone;
-GO
-
-CREATE OR ALTER VIEW INT.Person_PhoneNumberType
-AS
-    SELECT
-        PhoneNumberTypeID AS PhoneNumberTypeNK,
-        Name,
-        ModifiedDate,
-        ExtractDatetime,
-        RowHash
-    FROM STG.Person_PhoneNumberType;
 GO
 
 CREATE OR ALTER VIEW INT.Person_StateProvince
@@ -310,8 +239,8 @@ AS
             CAST(p.FinishedGoodsFlag AS VARCHAR(10)),
             IIF(p.FinishedGoodsFlag = 0, 'Production Component','Consumer Product'),
             COALESCE(p.Color,'NA'),
-            CAST(p.StandardCost AS VARCHAR(50)),
-            CAST(p.ListPrice AS VARCHAR(50)),
+            CONVERT(NVARCHAR(50), p.StandardCost, 2),
+            CONVERT(NVARCHAR(50), p.ListPrice, 2),
             CAST(p.Size AS VARCHAR(50)),
             COALESCE(TRIM(p.SizeUnitMeasureCode),'NA'),
             COALESCE(TRIM(p.WeightUnitMeasureCode),'NA'),
@@ -332,11 +261,178 @@ AS
         AS RowHash
 
     FROM STG.Production_Product p
-    LEFT JOIN STG.Production_ProductSubcategory AS sub 
+        LEFT JOIN STG.Production_ProductSubcategory AS sub
         ON p.ProductSubcategoryID = sub.ProductSubcategoryID
-    LEFT JOIN STG.Production_ProductCategory AS pc 
+        LEFT JOIN STG.Production_ProductCategory AS pc
         ON sub.ProductCategoryID = pc.ProductCategoryID
-    LEFT JOIN STG.Production_ProductModel AS mod
+        LEFT JOIN STG.Production_ProductModel AS mod
         ON p.ProductModelID = mod.ProductModelID;
 GO
 
+----------------------------
+-----------SALES------------
+----------------------------
+
+CREATE OR ALTER VIEW INT.Sales_SalesOrderDetail
+AS
+    SELECT
+        [SalesOrderID] AS SalesOrderNK,
+        [SalesOrderDetailID] AS SalesOrderDetailNK,
+        [CarrierTrackingNumber],
+        [OrderQty],
+        COALESCE([ProductID],-1) AS ProductNK,
+        COALESCE([SpecialOfferID],-1)  AS SpecialOfferNK,
+        [UnitPrice],
+        [UnitPriceDiscount],
+        [LineTotal],
+        [ModifiedDate],
+        [ExtractDatetime] AS SalesOrderDetailExtractedDateTime,
+        [RowHash] AS SalesOrderDetailHash
+    FROM STG.Sales_SalesOrderDetail;
+GO
+
+CREATE OR ALTER VIEW INT.Sales_SalesOrderHeader
+AS
+    SELECT
+        [SalesOrderID] AS SalesOrderNK,
+        [RevisionNumber],
+        [OrderDate],
+        [DueDate],
+        [ShipDate],
+        [Status] AS StatusNumber,
+        CASE [Status] 
+            WHEN 1 THEN 'In process'
+            WHEN 2 THEN 'Approved'
+            WHEN 3 THEN 'Backordered'
+            WHEN 4 THEN 'Rejected'
+            WHEN 5 THEN 'Shipped'
+            WHEN 6 THEN 'Cancelled'
+            ELSE 'No Status'
+        END AS StatusDescription,
+        [OnlineOrderFlag],
+        IIF([OnlineOrderFlag] = 0,'Offline Order','Online Order') AS OnlineOrderDescription,
+        [SalesOrderNumber],
+        [PurchaseOrderNumber],
+        [AccountNumber],
+        COALESCE([CustomerID],-1) AS CustomerNK,
+        COALESCE([SalesPersonID],-1) AS SalesPersonNK,
+        COALESCE([TerritoryID],-1) AS TerritoryNK,
+        COALESCE([BillToAddressID],-1) AS BillToAddressNK,
+        COALESCE([ShipToAddressID],-1) AS ShipToAddressNK,
+        COALESCE([ShipMethodID],-1) AS ShipMethodNK,
+        COALESCE([CreditCardID],-1) AS CreditCardNK,
+        COALESCE([CreditCardApprovalCode],'NA') AS CreditCardApprovalCode,
+        COALESCE([CurrencyRateID],-1) AS CurrencyRateNK,
+        [SubTotal],
+        [TaxAmt],
+        [Freight],
+        [TotalDue],
+        [Comment],
+        [ModifiedDate],
+        [ExtractDatetime] AS SalesOrderHeaderExtractedDateTime,
+        [RowHash] AS SalesOrderHeaderHash
+    FROM STG.Sales_SalesOrderHeader;
+GO
+
+CREATE OR ALTER VIEW INT.Sales_Store
+AS
+    WITH
+        XMLNAMESPACES (DEFAULT 'http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey')
+    SELECT
+        --keys
+        s.BusinessEntityID AS StoreNK,
+        s.SalesPersonID AS SalesPersonNK,
+
+        s.Name AS StoreName,
+        COALESCE(s.Demographics.value('(AnnualSales)[1]','MONEY'),0) AS AnnualSales,
+        COALESCE(s.Demographics.value('(AnnualRevenue)[1]','MONEY'),0) AS AnnualRevenue,
+        COALESCE(s.Demographics.value('(BusinessType)[1]','NVARCHAR(5)'),'NA') AS BusinessType,
+        COALESCE(s.Demographics.value('(Specialty)[1]','NVARCHAR(50)'),'NA') AS Specialty,
+        s.Demographics.value('(YearOpened)[1]', 'INT') AS YearOpened,
+        s.Demographics.value('(NumberEmployees)[1]','INT') AS NumberEmployees,
+
+        --Metadata
+        s.ModifiedDate,
+        s.ExtractDatetime,
+
+        /*TODO
+        - Overall target is to get DIM_Customer build (SCDT2)
+        - DIM_Store is required for DIM_Customer
+        - DIM_Customer once built will return CustomerSK into Fact_Sales instead of NK
+        - Above needed to ensure the correct customer dimension can be joined later based on order date
+        - Finish hash (watch type casting/converts and fallback inclusion from coalesce)
+        - Build other dim views required to
+        */
+
+        --Change detection
+        HASHBYTES('SHA2_256',CONCAT_WS('|',
+            COALESCE(s.Name,'NA'),
+            CAST(COALESCE(s.SalesPersonID,-1) AS VARCHAR(10)),
+            CONVERT(NVARCHAR(50), COALESCE(s.Demographics.value('(AnnualSales)[1]', 'MONEY'), 0), 2),
+
+        
+        ))
+
+    FROM STG.Sales_Store s;
+GO
+
+CREATE OR ALTER VIEW INT.FactSales
+AS
+    SELECT
+        --Keys
+        d.SalesOrderNK,
+        d.SalesOrderDetailNK,
+        d.ProductNK,
+        d.SpecialOfferNK,
+        h.BillToAddressNK,
+        h.ShipToAddressNK,
+        h.ShipMethodNK,
+        h.CreditCardNK,
+        h.CustomerNK,
+        h.SalesPersonNK,
+        h.TerritoryNK,
+        h.CurrencyRateNK,
+
+        --Header
+        h.RevisionNumber,
+        h.OrderDate,
+        h.DueDate,
+        h.ShipDate,
+        h.StatusDescription,
+        h.OnlineOrderFlag,
+        h.OnlineOrderDescription,
+        h.SalesOrderNumber,
+        h.PurchaseOrderNumber,
+        h.AccountNumber,
+        h.CreditCardApprovalCode,
+        h.SubTotal,
+        h.TaxAmt,
+        h.Freight,
+        h.TotalDue,
+        h.Comment,
+
+        --Detail
+        d.CarrierTrackingNumber,
+        d.OrderQty,
+        d.UnitPrice,
+        d.UnitPriceDiscount,
+        d.LineTotal,
+
+        --Metadata
+        h.ModifiedDate AS HeaderLastModifiedDate,
+        d.ModifiedDate AS DetailLastModifiedDate,
+        h.SalesOrderHeaderExtractedDateTime,
+        d.SalesOrderDetailExtractedDateTime,
+        h.SalesOrderHeaderHash,
+        d.SalesOrderDetailHash,
+
+        --Change detection
+        HASHBYTES('SHA2_256', CONCAT_WS('|',
+            CONVERT(NVARCHAR(64), h.SalesOrderHeaderHash, 2),
+            CONVERT(NVARCHAR(64), d.SalesOrderDetailHash, 2)
+        )) AS FactSalesHash
+
+    FROM INT.Sales_SalesOrderDetail d
+        INNER JOIN INT.Sales_SalesOrderHeader h
+        ON d.SalesOrderNK = h.SalesOrderNK;
+GO
