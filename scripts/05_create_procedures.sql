@@ -11,16 +11,14 @@ BEGIN
     BEGIN TRY 
         BEGIN TRANSACTION;
 
+        --Invalidate out-of-date SCD-T2 records
         UPDATE dim
-        SET dim.ValidTo = @ExecutionTime, 
-            dim.Valid=0
-        FROM MRT.DIM_Person dim
-        INNER JOIN (
-            SELECT
-            PersonNK,
-            RowHash
-        FROM INT.Person_Person
-        ) src ON dim.PersonNK = src.PersonNK
+        SET
+            dim.ValidTo = @ExecutionTime,
+            dim.Valid = 0
+        FROM MRT.Dim_Person dim
+            INNER JOIN INT.Person_Person src
+            ON dim.PersonNK = src.PersonNK
         WHERE dim.Valid = 1
         AND dim.RowHash <> src.RowHash;
 
@@ -94,6 +92,8 @@ BEGIN
 
     BEGIN TRY
         BEGIN TRANSACTION
+
+        --Invalidate out-of-date SCD-T2 records
             UPDATE dim
              SET dim.ValidTo = @ExecutionTime,
                 dim.Valid = 0
@@ -175,7 +175,8 @@ BEGIN
 
     BEGIN TRY
         BEGIN TRANSACTION
-        --Invalidate out-of-date SCDT2 records
+
+        --Invalidate out-of-date SCD-T2 records
             UPDATE dim
             SET
                 dim.ValidTo = @ExecutionTime,
@@ -293,6 +294,77 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE MRT.USP_LOAD_DIM_SALESPERSON
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+    DECLARE @ExecutionTime DATETIME2(7) = GETDATE();
+
+    BEGIN TRY
+        BEGIN TRANSACTION
+
+            --Invalidate out-of-date SCD-T2 records
+            UPDATE dim
+            SET
+                dim.ValidTo = @ExecutionTime,
+                dim.Valid = 0
+            FROM MRT.DIM_SalesPerson dim
+            INNER JOIN INT.SalesPerson src
+                ON dim.SalesPersonNK = src.SalesPersonNK
+            WHERE
+                dim.Valid = 1
+                AND dim.RowHash <> src.RowHash;
+
+            --Insert new & updated records
+            INSERT INTO MRT.DIM_SalesPerson
+                (
+                SalesPersonNK,
+                TerritoryNK,
+                SalesQuota,
+                Bonus,
+                CommissionPercentage,
+                SalesYTD,
+                SalesLastYear,
+                ModifiedDate,
+                ExtractDatetime,
+                RowHash,
+                ValidFrom,
+                ValidTo,
+                Valid  
+                )
+                SELECT
+                    src.SalesPersonNK,
+                    src.TerritoryNK,
+                    src.SalesQuota,
+                    src.Bonus,
+                    src.CommissionPercentage,
+                    src.SalesYTD,
+                    src.SalesLastYear,
+                    src.ModifiedDate,
+                    src.ExtractDatetime,
+                    src.RowHash,
+                    @ExecutionTime AS ValidFrom,
+                    NULL AS ValidTo,
+                    1 AS Valid
+                FROM INT.SalesPerson src
+                LEFT JOIN MRT.DIM_SalesPerson dim
+                    ON dim.SalesPersonNK = src.SalesPersonNK
+                    AND dim.Valid = 1
+                WHERE dim.SalesPersonSK IS NULL;
+
+            COMMIT TRANSACTION;
+            END TRY
+        BEGIN CATCH 
+        IF @@TRANCOUNT > 0 
+            ROLLBACK TRANSACTION;
+        THROW; 
+    END CATCH
+END;
+GO
+            
+
+
 CREATE OR ALTER PROCEDURE MRT.USP_LOAD_FACT_SALES
 AS
 BEGIN
@@ -311,7 +383,7 @@ BEGIN
                 fct.ShipMethodNK = src.ShipMethodNK,
                 fct.CreditCardNK = src.CreditCardNK,
                 fct.CustomerNK = src.CustomerNK,
-                fct.SalesPersonNK = src.SalesPersonNK,
+                fct.SalesPersonSK = sp.SalesPersonSK,
                 fct.TerritoryNK = src.TerritoryNK,
                 fct.CurrencyRateNK = src.CurrencyRateNK,
 
@@ -356,6 +428,11 @@ BEGIN
         ON src.ProductNK = p.ProductNK
             AND src.OrderDate >= p.ValidFrom
             AND (src.OrderDate < p.ValidTo OR p.ValidTo IS NULL)
+
+        LEFT JOIN MRT.DIM_SalesPerson sp
+        ON src.SalesPersonNK = sp.SalesPersonNK
+            AND src.OrderDate >= sp.ValidFrom
+            AND (src.OrderDate < sp.ValidTo OR sp.ValidTo IS NULL)
         
         WHERE fct.FactSalesHash <> src.FactSalesHash;
 
@@ -371,7 +448,7 @@ BEGIN
         ShipMethodNK,
         CreditCardNK,
         CustomerNK,
-        SalesPersonNK,
+        SalesPersonSK,
         TerritoryNK,
         CurrencyRateNK,
 
@@ -419,7 +496,7 @@ BEGIN
         src.ShipMethodNK,
         src.CreditCardNK,
         src.CustomerNK,
-        src.SalesPersonNK,
+        sp.SalesPersonSK,
         src.TerritoryNK,
         src.CurrencyRateNK,
 
@@ -464,6 +541,11 @@ BEGIN
         ON src.ProductNK = p.ProductNK
             AND src.OrderDate >= p.ValidFrom
             AND (src.OrderDate < p.ValidTo OR p.ValidTo IS NULL)
+
+        LEFT JOIN MRT.DIM_SalesPerson sp
+        ON src.SalesPersonNK = sp.SalesPersonNK
+            AND src.OrderDate >= sp.ValidFrom
+            AND (src.OrderDate < sp.ValidTo OR sp.ValidTo IS NULL)
 
     WHERE fct.FactSalesSK IS NULL;
             COMMIT TRANSACTION;

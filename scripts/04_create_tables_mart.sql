@@ -57,7 +57,8 @@ VALUES
         -1,
         '1900-01-01',
         1,
-        HASHBYTES('SHA2_256', CONCAT_WS('|',-1,-1,'1900-01-01',1)));
+        HASHBYTES('SHA2_256', 'FallbackEntityRow')
+    );
 
 SET IDENTITY_INSERT MRT.DIM_Person OFF;
 GO
@@ -132,7 +133,7 @@ VALUES
         'NA',
         '1900-01-01',
         1,
-        HASHBYTES('SHA2_256', CONCAT_WS('|', -1, -1, '1900-01-01', 1))
+        HASHBYTES('SHA2_256', 'FallbackEntityRow')
 );
 
 SET IDENTITY_INSERT MRT.DIM_Person_Address OFF;
@@ -230,49 +231,121 @@ INSERT INTO MRT.Dim_Product
     ValidFrom,
     ValidTo,
     Valid
-    )
-VALUES
+    ) VALUES
     (
-        -1,
-        -1,
-        'NA',
-        'NA',
-        NULL,
-        'NA',
-        NULL,
-        'NA',
-        'NA',
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        'NA',
-        'NA',
-        'NA',
-        NULL,
-        NULL,
-        'NA',
-        'NA',
-        'NA',
-        -1,
-        'NA',
-        -1,
-        'NA',
-        -1,
-        'NA',
-        '1900-01-01',
-        NULL,
-        NULL,
-        NULL,
-        '1900-01-01',
-        HASHBYTES('SHA2_256', CONCAT_WS('|', -1, -1, '1900-01-01', 1)),
-        '1900-01-01',
-        NULL,
-        1
+    -1,
+    -1,
+    'NA',
+    'NA',
+    NULL,
+    'NA',
+    NULL,
+    'NA',
+    'NA',
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'NA',
+    'NA',
+    'NA',
+    NULL,
+    NULL,
+    'NA',
+    'NA',
+    'NA',
+    -1,
+    'NA',
+    -1,
+    'NA',
+    -1,
+    'NA',
+    '1900-01-01',
+    NULL,
+    NULL,
+    NULL,
+    '1900-01-01',
+    HASHBYTES('SHA2_256', 'FallbackEntityRow'),
+    '1900-01-01',
+    NULL,
+    1
     )
 
 SET IDENTITY_INSERT MRT.Dim_Product OFF;
 GO
+
+IF OBJECT_ID (N'MRT.DIM_SalesPerson',N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.DIM_SalesPerson
+    (
+        --Keys
+        [SalesPersonSK] INT IDENTITY(1,1) PRIMARY KEY,
+        [SalesPersonNK] INT NOT NULL,
+        [TerritoryNK] INT NULL,
+
+        --SCD-T2 tracked
+        [SalesQuota] MONEY NULL,
+        [Bonus] MONEY NULL,
+        [CommissionPercentage] smallmoney NULL,
+        [SalesYTD] MONEY NULL,
+        [SalesLastYear] MONEY NULL,
+
+        --Metadata
+        [ModifiedDate] DATETIME2,
+        [ExtractDatetime] DATETIME2,
+
+        --Change detection
+        [RowHash] VARBINARY(32),
+
+        --Tracking
+        [ValidFrom] DATETIME2 NOT NULL,
+        [ValidTo] DATETIME2 NULL,
+        [Valid] BIT DEFAULT 1
+    )
+
+    --Index fields used for MRT.USP_LOAD_DIM_SALESPERSON joins
+    CREATE NONCLUSTERED INDEX IX_Dim_SalesPerson_SalesPersonNK_Valid
+    ON MRT.DIM_SalesPerson (SalesPersonNK, Valid);
+
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_SalesPerson ON;
+INSERT INTO MRT.DIM_SalesPerson
+    (
+    SalesPersonNK,
+    TerritoryNK,
+    SalesQuota,
+    Bonus,
+    CommissionPercentage,
+    SalesYTD,
+    SalesLastYear,
+    ModifiedDate,
+    ExtractDatetime,
+    RowHash,
+    ValidFrom,
+    ValidTo,
+    Valid 
+    )VALUES
+    (
+    -1,
+    -1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    '1900-01-01',
+    '1900-01-01',
+    HASHBYTES('SHA2_256', 'FallbackEntityRow'),
+    '1900-01-01',
+    NULL,
+    1
+    )
+
+    SET IDENTITY_INSERT MRT.DIM_SalesPerson OFF;
+GO
+
 
 --------------------
 --------FACTS-------
@@ -293,7 +366,7 @@ BEGIN
         [ShipMethodNK] INT NOT NULL,
         [CreditCardNK] INT NOT NULL,
         [CustomerNK] INT NOT NULL,
-        [SalesPersonNK] INT NOT NULL,
+        [SalesPersonSK] INT NOT NULL,
         [TerritoryNK] INT NOT NULL,
         [CurrencyRateNK] INT NOT NULL,
 
@@ -338,9 +411,12 @@ BEGIN
             CONSTRAINT UQ_FactSales_SalesOrderDetailNK UNIQUE (SalesOrderDetailNK),
     )
 
-    --Index on ProductSK for better future join performance.
+    --Index on Dimensions for better future join performance.
     CREATE NONCLUSTERED INDEX IX_FactSales_ProductSK
     ON MRT.Fact_Sales (ProductSK);
+
+    CREATE NONCLUSTERED INDEX IX_FactSales_SalesPersonSK
+    ON MRT.Fact_Sales (SalesPersonSK);
 
 END;
 GO

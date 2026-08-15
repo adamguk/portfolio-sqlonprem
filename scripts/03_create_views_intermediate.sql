@@ -339,42 +339,66 @@ AS
     WITH
         XMLNAMESPACES (DEFAULT 'http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey')
     SELECT
-        --keys
+        --Keys
         s.BusinessEntityID AS StoreNK,
         s.SalesPersonID AS SalesPersonNK,
 
+        --SCD-T2 tracked
         s.Name AS StoreName,
         COALESCE(s.Demographics.value('(AnnualSales)[1]','MONEY'),0) AS AnnualSales,
         COALESCE(s.Demographics.value('(AnnualRevenue)[1]','MONEY'),0) AS AnnualRevenue,
         COALESCE(s.Demographics.value('(BusinessType)[1]','NVARCHAR(5)'),'NA') AS BusinessType,
         COALESCE(s.Demographics.value('(Specialty)[1]','NVARCHAR(50)'),'NA') AS Specialty,
         s.Demographics.value('(YearOpened)[1]', 'INT') AS YearOpened,
+
+        --SCD-T1 not tracked
         s.Demographics.value('(NumberEmployees)[1]','INT') AS NumberEmployees,
 
         --Metadata
         s.ModifiedDate,
         s.ExtractDatetime,
 
-        /*TODO
-        - Overall target is to get DIM_Customer build (SCDT2)
-        - DIM_Store is required for DIM_Customer
-        - DIM_Customer once built will return CustomerSK into Fact_Sales instead of NK
-        - Above needed to ensure the correct customer dimension can be joined later based on order date
-        - Finish hash (watch type casting/converts and fallback inclusion from coalesce)
-        - Build other dim views required to
-        */
-
         --Change detection
         HASHBYTES('SHA2_256',CONCAT_WS('|',
             COALESCE(s.Name,'NA'),
             CAST(COALESCE(s.SalesPersonID,-1) AS VARCHAR(10)),
-            CONVERT(NVARCHAR(50), COALESCE(s.Demographics.value('(AnnualSales)[1]', 'MONEY'), 0), 2),
-
-        
-        ))
+            CONVERT(NVARCHAR(50),COALESCE(s.Demographics.value('(AnnualSales)[1]','MONEY'),0),2),
+            CONVERT(NVARCHAR(50),COALESCE(s.Demographics.value('(AnnualRevenue)[1]','MONEY'),0),2),
+            COALESCE(s.Demographics.value('(BusinessType)[1]','NVARCHAR(5)'),'NA'),
+            COALESCE(s.Demographics.value('(Specialty)[1]','NVARCHAR(5)'),'NA'),
+            s.Demographics.value('(YearOpened)[1]', 'INT'))) as RowHash
 
     FROM STG.Sales_Store s;
 GO
+
+CREATE OR ALTER VIEW INT.SalesPerson
+AS
+    SELECT
+        --Keys
+        s.BusinessEntityID AS SalesPersonNK,
+        COALESCE(s.TerritoryID,-1) AS TerritoryNK,
+
+        --SCD-T2 tracked
+        s.SalesQuota,
+        s.Bonus,
+        s.CommissionPct AS CommissionPercentage,
+        s.SalesYTD,
+        s.SalesLastYear,
+
+        --Metadata
+        s.ModifiedDate,
+        s.ExtractDatetime,
+
+        --Change detection
+        HASHBYTES('SHA2_256',CONCAT_WS('|',
+            CONVERT(NVARCHAR(50),COALESCE(s.SalesQuota,0),2),
+            CONVERT(NVARCHAR(50),COALESCE(s.Bonus,0),2),
+            CONVERT(NVARCHAR(50),COALESCE(s.CommissionPct,0),2),
+            CONVERT(NVARCHAR(50),COALESCE(s.SalesYTD,0),2),
+            CONVERT(NVARCHAR(50),COALESCE(s.SalesLastYear,0),2)
+        )) AS RowHash
+
+    FROM STG.Sales_SalesPerson s
 
 CREATE OR ALTER VIEW INT.FactSales
 AS

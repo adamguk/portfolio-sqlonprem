@@ -43,7 +43,18 @@ EXECUTE sp_add_jobstep
     @step_name = N'Populate MRT.DIM_Product',
     @subsystem = N'TSQL',
     @command = N'EXEC MRT.USP_LOAD_DIM_PRODUCT',
-    @rety_attempts = 3,
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_SalesPerson',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_SALESPERSON',
+    @retry_attempts = 3,
     @retry_interval = 5,
     @on_fail_action = 2,
     @flags = 6;
@@ -54,7 +65,7 @@ EXECUTE sp_add_jobstep
     @step_name = N'Populate MRT.FCT_Sales',
     @subsystem = N'TSQL',
     @command = N'EXEC MRT.USP_LOAD_FACT_SALES',
-    @rety_attempts = 3,
+    @retry_attempts = 3,
     @retry_interval = 5,
     @on_fail_action = 2,
     @flags = 6;
