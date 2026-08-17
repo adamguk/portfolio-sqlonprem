@@ -399,6 +399,79 @@ AS
         )) AS RowHash
 
     FROM STG.Sales_SalesPerson s
+GO
+
+/*
+BELOW 
+IS
+CURRENT
+WORK
+TO
+FINISH
+*/
+
+CREATE OR ALTER VIEW INT.Sales_Customer
+AS
+    SELECT
+        --Keys
+        c.CustomerID AS CustomerNK,
+        COALESCE(c.PersonID,-1) AS PersonNK,
+        COALESCE(c.StoreID,-1) AS StoreNK,
+        COALESCE(c.TerritoryID,-1) AS TerritoryNK,
+
+        --Shared Fields
+        CASE 
+            WHEN c.PersonID IS NOT NULL THEN 'Individual' 
+            WHEN c.StoreID IS NOT NULL THEN 'Store'
+            ELSE 'NA' 
+            END AS CustomerType,
+        c.AccountNumber,
+
+        --Store Fields
+        st.StoreName,
+        st.AnnualRevenue AS Store_AnnualRevenue,
+        st.AnnualSales AS Store_AnnualSales,
+        st.BusinessType AS Store_BusinessType,
+        st.Specialty AS Store_Specialty,
+        st.YearOpened AS Store_YearOpened,
+        st.NumberEmployees AS Store_EmployeeCount,  
+
+        --Individual Customer Fields
+        p.PersonTypeDescription,
+        p.FullName AS Individual_FullName,
+        p.EmailAddress AS Individual_EmailAddress,
+        p.EmailPromotionSignUp AS Individual_EmailPromotionSignUp,
+
+        --Metadata
+        c.ModifiedDate,
+        c.ExtractDatetime,
+
+        --Change detection
+        HASHBYTES('SHA2_256',CONCAT_WS('|',
+            CASE 
+                WHEN c.PersonID IS NOT NULL THEN 'Individual' 
+                WHEN c.StoreID IS NOT NULL THEN 'Store'
+            ELSE 'NA' 
+            END,
+            COALESCE(c.AccountNumber,'NA'),
+            COALESCE(st.StoreName,'NA'),
+            COALESCE(CONVERT(NVARCHAR(50),st.AnnualRevenue,2),'NA'),
+            COALESCE(CONVERT(NVARCHAR(50),st.AnnualSales,2),'NA'),
+            COALESCE(st.BusinessType,'NA'),
+            COALESCE(st.Specialty,'NA'),
+            COALESCE(CAST(st.YearOpened AS NVARCHAR(10)),'NA'),
+            COALESCE(CAST(st.NumberEmployees AS NVARCHAR(50)),'NA'),
+            COALESCE(p.PersonTypeDescription,'NA'),
+            COALESCE(p.FullName,'NA'),
+            COALESCE(p.EmailAddress,'NA'),
+            COALESCE(p.EmailPromotionSignUp,'NA')        
+        )) AS CustomerRowHash
+
+    FROM STG.Sales_Customer c
+    LEFT JOIN INT.Sales_Store st 
+        ON c.StoreID = st.StoreNK
+    LEFT JOIN INT.Person_Person p
+        ON c.PersonID = p.PersonNK
 
 CREATE OR ALTER VIEW INT.FactSales
 AS
