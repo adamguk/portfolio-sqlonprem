@@ -705,6 +705,23 @@ BEGIN
     CREATE NONCLUSTERED INDEX IX_FactSales_TerritorySK
     ON MRT.Fact_Sales(TerritorySK);
 
+    /**Below index overkill for AdventureWorks but
+    included as example of columnstore to improve performance
+    on common expected analyst quieries like sum(linetotal)
+    by orderdate, avg(linetotal) by SalesPerson, etc...*//
+    CREATE NONCLUSTERED COLUMNSTORE INDEX IX_FactSales_Columnstore
+    ON MRT.Fact_Sales(
+        ProductSK,
+        CustomerSK,
+        SalesPersonSK,
+        TerritorySK,
+        OrderDate,
+        OrderQty,
+        UnitPrice,
+        UnitPriceDiscount,
+        LineTotal 
+    );
+
 END;
 GO
 
