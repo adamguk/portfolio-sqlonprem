@@ -6,7 +6,42 @@
 # PORTFOLIO ON-PREM SQL SERVER
 Example of an DWH setup limited to only on-prem Microsoft SQL Server using Transact-SQL
 
-## Pipeline
+## 📝Notes and Limitations
+- MERGE statements purposefully avoided for known SQL bugs that still exist in SQL Server 2025 with merge operations. Instead applied seperate update and insert statements.
+
+
+## 📚Layered Modelling
+- 'STG' (Staging tables): raw, untransformed, source data, loaded via SSIS
+- 'INT' (Intermediate views): conform staged data to business terminology, applies logic, compute hashes, only reads from STG
+- 'MRT' (Mart Tables): business-ready Dimension ('DIM_') and Fact ('Fact_') tables, ready for consumption downstream by systems such as Power BI / Looker / DBT / etc.
+
+## 📘Dimensions
+Modelled using the appropriate level of tracking required, e.g. type1, type2, and mixed/hybrid, based on the judged meaningfullness at the time of writing.
+
+## 🔄️Change detection
+Managed via hashing (SHA2-256) within the Intermediate ('INT') views. Includes locale-stable (UK) conversions of data types.
+
+## 🗝️Key design
+- Source-system IDs and keys aliased to 'NK' and retained
+- Surrogate keys referenced as 'SK' and used to identify specific versions of an entity
+- Dimension joins utilise 'SK' for time-sensitive joins to ensure appropriate dimension attributes are returned for the correct point-in-time for each fact
+- Dimensions contain a 'fallback entity' (SK of -1) to facilitate outer-join safety and inner-join simplicity
+
+## ⚡Loading and stored procedures: 
+Wrapped in try/catch with transaction rollback. Divided into multiple stages where necessary:
+- Mark and close out out-of-date records
+- Insert new/updated record versions
+- Update pre-existing records
+- Use of merge avoided due to known issues in SQL Server 2025
+- Above multi-stage methodology used to simplify debugging
+
+## #️⃣Indexing
+- Dimensions contain nonclustered indexes to support time-based and time-agnostic joins
+- Fact tables contain nonclustered indexes on surrogate keys to support downstream joins by engineers/analysts 
+
+
+
+# Pipeline
 ```mermaid
 ---
 config:

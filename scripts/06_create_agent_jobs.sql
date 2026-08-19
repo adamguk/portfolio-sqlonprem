@@ -62,6 +62,39 @@ EXECUTE sp_add_jobstep
 EXECUTE sp_add_jobstep
     @job_name = N'Populate_Marts',
     @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_Store',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_STORE',
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_Territory',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_TERRITORY',
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_Customer',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_CUSTOMER',
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
     @step_name = N'Populate MRT.FCT_Sales',
     @subsystem = N'TSQL',
     @command = N'EXEC MRT.USP_LOAD_FACT_SALES',

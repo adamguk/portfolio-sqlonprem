@@ -5,7 +5,7 @@ GO
 -----DIMENSIONS-----
 --------------------
 
-IF OBJECT_ID (N'MRT.Dim_Person', N'U') IS NULL 
+IF OBJECT_ID (N'MRT.DIM_Person', N'U') IS NULL 
 BEGIN
     CREATE TABLE MRT.DIM_Person
     (
@@ -24,9 +24,9 @@ BEGIN
         [FullName] NVARCHAR(180) NULL,
         [EmailAddress] NVARCHAR(50) NULL,
         [EmailPromotionSignUpFlag] INT NULL,
-        [EmailPromotionSignUp] VARCHAR(3),
+        [EmailPromotionSignUp] VARCHAR(3) NULL,
         [ModifiedDate] DATETIME2(7) NULL,
-        ExtractDatetime DATETIME2(7) NULL DEFAULT GETDATE(),
+        ExtractDatetime DATETIME2(7) NOT NULL,
         --SCD T2 Tracking
         [ValidFrom] DATETIME2(7) NOT NULL,
         [ValidTo] DATETIME2(7) NULL,
@@ -34,9 +34,13 @@ BEGIN
         [RowHash] VARBINARY(32) NULL
     )
 
-    --Index fields used for MRT.USP_LOAD_DIM_PERSON joins
-    CREATE NONCLUSTERED INDEX IX_Dim_Person_PersonNK_Valid
-    ON MRT.Dim_Person (PersonNK, Valid);
+    --Index fields used for time-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Person_PersonNK_Valid
+    ON MRT.DIM_Person (PersonNK, Valid);
+
+    --Index fields used for time-based joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Person_PersonNK_ValidFrom_ValidTo
+    ON MRT.DIM_Person (PersonNK, ValidFrom, ValidTo);
 
 END;
 GO
@@ -63,7 +67,7 @@ VALUES
 SET IDENTITY_INSERT MRT.DIM_Person OFF;
 GO
 
-IF OBJECT_ID (N'MRT.Dim_Person_Address', N'U') IS NULL 
+IF OBJECT_ID (N'MRT.DIM_Person_Address', N'U') IS NULL 
 BEGIN
     CREATE TABLE MRT.DIM_Person_Address
     (
@@ -97,9 +101,9 @@ BEGIN
         [RowHash] VARBINARY(32) NULL
     )
 
-    --Index fields used for MRT.USP_LOAD_DIM_PERSON_ADDRESS joins
-    CREATE NONCLUSTERED INDEX IX_Dim_PersonAddress_PersonAddressCNK_Valid
-    ON MRT.Dim_Person_Address (PersonAddressCNK, Valid);
+    --Index fields used for time-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_PersonAddress_PersonAddressCNK_Valid
+    ON MRT.DIM_Person_Address (PersonAddressCNK, Valid);
 END;
 GO
 
@@ -139,9 +143,9 @@ VALUES
 SET IDENTITY_INSERT MRT.DIM_Person_Address OFF;
 GO
 
-IF OBJECT_ID (N'MRT.Dim_Product', N'U') IS NULL 
+IF OBJECT_ID (N'MRT.DIM_Product', N'U') IS NULL 
 BEGIN
-    CREATE TABLE MRT.Dim_Product
+    CREATE TABLE MRT.DIM_Product
     (
         ProductSK INT IDENTITY(1,1) PRIMARY KEY,
         ProductNK INT NOT NULL,
@@ -174,26 +178,26 @@ BEGIN
         SellEndDate DATETIME2 NULL,
         DiscontinuedDate DATETIME2 NULL,
         ModifiedDate DATETIME2 NULL,
-        ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
+        ExtractDatetime DATETIME2 NOT NULL,
         RowHash VARBINARY(32) NULL,
         ValidFrom DATETIME2 NOT NULL,
         ValidTo DATETIME2 NULL,
         Valid BIT DEFAULT 1
     )
 
-    --Index fields used for MRT.USP_LOAD_DIM_PRODUCT joins
-    CREATE NONCLUSTERED INDEX IX_Dim_Product_ProductNK_Valid
-    ON MRT.Dim_Product (ProductNK, Valid);
+    --Index fields used for time-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Product_ProductNK_Valid
+    ON MRT.DIM_Product (ProductNK, Valid);
 
-    --Index fields used for MRT.USP_LOAD_FACT_SALES joins
-    CREATE NONCLUSTERED INDEX IX_Dim_Product_ProductNK_ValidFrom_ValidTo
-    ON MRT.Dim_Product (ProductNK, ValidFrom, ValidTo);
+    --Index fields used for time-based joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Product_ProductNK_ValidFrom_ValidTo
+    ON MRT.DIM_Product (ProductNK, ValidFrom, ValidTo);
 
 END;
 GO
 
-SET IDENTITY_INSERT MRT.Dim_Product ON;
-INSERT INTO MRT.Dim_Product
+SET IDENTITY_INSERT MRT.DIM_Product ON;
+INSERT INTO MRT.DIM_Product
     (
     ProductSK,
     ProductNK,
@@ -231,47 +235,48 @@ INSERT INTO MRT.Dim_Product
     ValidFrom,
     ValidTo,
     Valid
-    ) VALUES
+    )
+VALUES
     (
-    -1,
-    -1,
-    'NA',
-    'NA',
-    NULL,
-    'NA',
-    NULL,
-    'NA',
-    'NA',
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    'NA',
-    'NA',
-    'NA',
-    NULL,
-    NULL,
-    'NA',
-    'NA',
-    'NA',
-    -1,
-    'NA',
-    -1,
-    'NA',
-    -1,
-    'NA',
-    '1900-01-01',
-    NULL,
-    NULL,
-    NULL,
-    '1900-01-01',
-    HASHBYTES('SHA2_256', 'FallbackEntityRow'),
-    '1900-01-01',
-    NULL,
-    1
+        -1,
+        -1,
+        'NA',
+        'NA',
+        NULL,
+        'NA',
+        NULL,
+        'NA',
+        'NA',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        'NA',
+        'NA',
+        'NA',
+        NULL,
+        NULL,
+        'NA',
+        'NA',
+        'NA',
+        -1,
+        'NA',
+        -1,
+        'NA',
+        -1,
+        'NA',
+        '1900-01-01',
+        NULL,
+        NULL,
+        NULL,
+        '1900-01-01',
+        HASHBYTES('SHA2_256', 'FallbackEntityRow'),
+        '1900-01-01',
+        NULL,
+        1
     )
 
-SET IDENTITY_INSERT MRT.Dim_Product OFF;
+SET IDENTITY_INSERT MRT.DIM_Product OFF;
 GO
 
 IF OBJECT_ID (N'MRT.DIM_SalesPerson',N'U') IS NULL
@@ -283,7 +288,7 @@ BEGIN
         [SalesPersonNK] INT NOT NULL,
         [TerritoryNK] INT NULL,
 
-        --SCD-T2 tracked
+        --SCD-T1
         [SalesQuota] MONEY NULL,
         [Bonus] MONEY NULL,
         [CommissionPercentage] smallmoney NULL,
@@ -303,9 +308,13 @@ BEGIN
         [Valid] BIT DEFAULT 1
     )
 
-    --Index fields used for MRT.USP_LOAD_DIM_SALESPERSON joins
-    CREATE NONCLUSTERED INDEX IX_Dim_SalesPerson_SalesPersonNK_Valid
+    --Index fields used for time-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_SalesPerson_SalesPersonNK_Valid
     ON MRT.DIM_SalesPerson (SalesPersonNK, Valid);
+
+    --Index fields used for time-based joins
+    CREATE NONCLUSTERED INDEX IX_DIM_SalesPerson_SalesPersonNK_ValidFrom_ValidTo
+    ON MRT.DIM_SalesPerson (SalesPersonNK, ValidFrom, ValidTo);
 
 END;
 GO
@@ -313,6 +322,7 @@ GO
 SET IDENTITY_INSERT MRT.DIM_SalesPerson ON;
 INSERT INTO MRT.DIM_SalesPerson
     (
+    SalesPersonSK,
     SalesPersonNK,
     TerritoryNK,
     SalesQuota,
@@ -325,27 +335,298 @@ INSERT INTO MRT.DIM_SalesPerson
     RowHash,
     ValidFrom,
     ValidTo,
-    Valid 
-    )VALUES
+    Valid
+    )
+VALUES
     (
-    -1,
-    -1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    '1900-01-01',
-    '1900-01-01',
-    HASHBYTES('SHA2_256', 'FallbackEntityRow'),
-    '1900-01-01',
-    NULL,
-    1
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        '1900-01-01',
+        '1900-01-01',
+        HASHBYTES('SHA2_256', 'FallbackEntityRow'),
+        '1900-01-01',
+        NULL,
+        1
     )
 
-    SET IDENTITY_INSERT MRT.DIM_SalesPerson OFF;
+SET IDENTITY_INSERT MRT.DIM_SalesPerson OFF;
 GO
 
+IF OBJECT_ID (N'MRT.DIM_Store',N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.DIM_Store
+    (
+        --Keys
+        [StoreSK] INT IDENTITY(1,1) PRIMARY KEY,
+        [StoreNK] INT NOT NULL,
+        [SalesPersonSK] INT NULL,
+
+        --SCD-T2 tracked
+        [StoreName] NVARCHAR(50) NOT NULL,
+        [BusinessType] NVARCHAR(5) NOT NULL,
+        [Specialty] NVARCHAR(50) NOT NULL,
+
+        --SCD-T1
+        [AnnualSales] MONEY NOT NULL,
+        [AnnualRevenue] MONEY NOT NULL,
+        [YearOpened] INT NULL,
+        [EmployeeCount] INT NULL,
+
+        --Metadata
+        [ModifiedDate] DATETIME2 NULL,
+        [ExtractDatetime] DATETIME2 NOT NULL,
+
+        --Change detection
+        [RowHash] VARBINARY(32) NOT NULL,
+
+        --Tracking
+        [ValidFrom] DATETIME2(7) NOT NULL,
+        [ValidTo] DATETIME2(7) NULL,
+        [Valid] BIT DEFAULT 1 NOT NULL
+    )
+
+    --Index fields used for time-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Store_StoreNK_Valid
+    ON MRT.DIM_Store(StoreNK, Valid);
+
+    --Index fields used for time-based joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Store_StoreNK_ValidFrom_ValidTo
+    ON MRT.DIM_Store(StoreNK, ValidFrom,ValidTo);
+
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_Store ON;
+
+INSERT INTO MRT.DIM_Store
+    (
+    StoreSK,
+    StoreNK,
+    SalesPersonSK,
+    StoreName,
+    AnnualSales,
+    AnnualRevenue,
+    BusinessType,
+    Specialty,
+    YearOpened,
+    EmployeeCount,
+    ModifiedDate,
+    ExtractDatetime,
+    RowHash,
+    ValidFrom,
+    ValidTo,
+    Valid
+    )
+VALUES
+    (
+        -1,
+        -1,
+        -1,
+        'NA',
+        0,
+        0,
+        'NA',
+        'NA',
+        0,
+        0,
+        '1900-01-01',
+        '1900-01-01',
+        HASHBYTES('SHA2_256', 'FallbackEntityRow'),
+        '1900-01-01',
+        NULL,
+        1
+    )
+
+SET IDENTITY_INSERT MRT.DIM_Store OFF;
+GO
+
+IF OBJECT_ID (N'MRT.DIM_Territory' ,N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.DIM_Territory
+    (
+        --Keys
+        [TerritorySK] INT IDENTITY(1,1) PRIMARY KEY,
+        [TerritoryNK] INT NOT NULL,
+
+        --SCD-T2 Tracked
+        [TerritoryName] NVARCHAR(50) NOT NULL,
+        [CountryRegionCode] NVARCHAR(3) NOT NULL,
+        [TerritoryGroup] NVARCHAR(50) NOT NULL,
+
+        --SCD-T1
+        [SalesYTD] MONEY NULL,
+        [SalesLastYear] MONEY NULL,
+        [CostYTD] MONEY NULL,
+        [CostLastYear] MONEY NULL,
+
+        --Metadata
+        [ModifiedDate] DATETIME2 NULL,
+        [ExtractedDatetime] DATETIME2 NULL,
+
+        --Change Detection
+        [RowHash] VARBINARY(32) NOT NULL,
+
+        --Tracking
+        [ValidFrom] DATETIME2 NOT NULL,
+        [ValidTo] DATETIME2 NULL,
+        [Valid] BIT DEFAULT 1 NOT NULL
+    )
+
+    --Index fields used for time-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Territory_TerritoryNK_Valid
+    ON MRT.DIM_Territory(TerritoryNK, Valid);
+
+    --Index fields used for time-based joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Territory_TerritoryNK_ValidFrom_ValidTo
+    ON MRT.DIM_Territory(TerritoryNK,ValidFrom,ValidTo);
+
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_Territory ON;
+
+INSERT INTO MRT.DIM_Territory
+    (
+    TerritorySK,
+    TerritoryNK,
+    TerritoryName,
+    CountryRegionCode,
+    TerritoryGroup,
+    SalesYTD,
+    SalesLastYear,
+    CostYTD,
+    CostLastYear,
+    ModifiedDate,
+    ExtractedDatetime,
+    RowHash,
+    ValidFrom,
+    ValidTo,
+    Valid
+    )
+VALUES
+    (
+        -1,
+        -1,
+        'NA',
+        'NA',
+        'NA',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        '1900-01-01',
+        '1900-01-01',
+        HASHBYTES('SHA2_256','FallbackEntityRow'),
+        '1900-01-01',
+        NULL,
+        1
+    )
+
+SET IDENTITY_INSERT MRT.DIM_Territory OFF;
+GO
+
+
+IF OBJECT_ID (N'MRT.DIM_Customer',N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.DIM_Customer
+    (
+        [CustomerSK] INT IDENTITY(1,1) PRIMARY KEY,
+        [CustomerNK] INT NOT NULL,
+        [PersonSK] INT NOT NULL,
+        [StoreSK] INT NOT NULL,
+        [TerritorySK] INT NOT NULL,
+        [AccountNumber] VARCHAR(10) NOT NULL,
+        [CustomerType] VARCHAR(20) NOT NULL,
+        [StoreName] NVARCHAR(50) NULL,
+        [Store_AnnualRevenue] MONEY NULL,
+        [Store_AnnualSales] MONEY NULL,
+        [Store_BusinessType] NVARCHAR(50) NULL,
+        [Store_Specialty] NVARCHAR(50) NULL,
+        [Store_YearOpened] INT NULL,
+        [Store_EmployeeCount] INT NULL,
+        [PersonTypeDescription] NVARCHAR(50) NULL,
+        [Individual_FullName] NVARCHAR(180) NULL,
+        [Individual_EmailAddress] NVARCHAR(50) NULL,
+        [Individual_EmailPromotionSignUp] VARCHAR(3) NULL,
+        [RowHash] VARBINARY(32) NOT NULL,
+        [ValidFrom] DATETIME2(7) NOT NULL,
+        [ValidTo] DATETIME2(7) NULL,
+        [Valid] BIT DEFAULT 1 NOT NULL
+    )
+
+    --Index fields used for time-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Customer_CustomerNK_Valid
+    ON MRT.DIM_Customer(CustomerNK, Valid);
+
+    --Index fields for time-based joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Customer_CustomerNK_ValidFrom_ValidTo
+    ON MRT.DIM_Customer(CustomerNK,ValidFrom,ValidTo);
+
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_Customer ON;
+
+INSERT INTO MRT.DIM_Customer
+    (
+    CustomerSK,
+    CustomerNK,
+    PersonSK,
+    StoreSK,
+    TerritorySK,
+    AccountNumber,
+    CustomerType,
+    StoreName,
+    Store_AnnualRevenue,
+    Store_AnnualSales,
+    Store_BusinessType,
+    Store_Specialty,
+    Store_YearOpened,
+    Store_EmployeeCount,
+    PersonTypeDescription,
+    Individual_FullName,
+    Individual_EmailAddress,
+    Individual_EmailPromotionSignUp,
+    RowHash,
+    ValidFrom,
+    ValidTo,
+    Valid
+    )
+VALUES
+    (
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        'NA',
+        'NA',
+        'NA',
+        0,
+        0,
+        'NA',
+        'NA',
+        NULL,
+        NULL,
+        'NA',
+        'NA',
+        'NA',
+        'NA',
+        HASHBYTES('SHA2_256','FallbackEntityRow'),
+        '1900-01-01',
+        NULL,
+        1
+    );
+
+SET IDENTITY_INSERT MRT.DIM_Customer OFF;
+GO
 
 --------------------
 --------FACTS-------
@@ -365,9 +646,9 @@ BEGIN
         [ShipToAddressNK] INT NOT NULL,
         [ShipMethodNK] INT NOT NULL,
         [CreditCardNK] INT NOT NULL,
-        [CustomerNK] INT NOT NULL,
+        [CustomerSK] INT NOT NULL,
         [SalesPersonSK] INT NOT NULL,
-        [TerritoryNK] INT NOT NULL,
+        [TerritorySK] INT NOT NULL,
         [CurrencyRateNK] INT NOT NULL,
 
         --Header
@@ -411,12 +692,18 @@ BEGIN
             CONSTRAINT UQ_FactSales_SalesOrderDetailNK UNIQUE (SalesOrderDetailNK),
     )
 
-    --Index on Dimensions for better future join performance.
+    --Index on DIMensions for better future join performance.
     CREATE NONCLUSTERED INDEX IX_FactSales_ProductSK
-    ON MRT.Fact_Sales (ProductSK);
+    ON MRT.Fact_Sales(ProductSK);
 
     CREATE NONCLUSTERED INDEX IX_FactSales_SalesPersonSK
-    ON MRT.Fact_Sales (SalesPersonSK);
+    ON MRT.Fact_Sales(SalesPersonSK);
+
+    CREATE NONCLUSTERED INDEX IX_FactSales_CustomerSK
+    ON MRT.Fact_Sales(CustomerSK);
+
+    CREATE NONCLUSTERED INDEX IX_FactSales_TerritorySK
+    ON MRT.Fact_Sales(TerritorySK);
 
 END;
 GO

@@ -345,14 +345,15 @@ AS
 
         --SCD-T2 tracked
         s.Name AS StoreName,
-        COALESCE(s.Demographics.value('(AnnualSales)[1]','MONEY'),0) AS AnnualSales,
-        COALESCE(s.Demographics.value('(AnnualRevenue)[1]','MONEY'),0) AS AnnualRevenue,
         COALESCE(s.Demographics.value('(BusinessType)[1]','NVARCHAR(5)'),'NA') AS BusinessType,
         COALESCE(s.Demographics.value('(Specialty)[1]','NVARCHAR(50)'),'NA') AS Specialty,
-        s.Demographics.value('(YearOpened)[1]', 'INT') AS YearOpened,
 
-        --SCD-T1 not tracked
-        s.Demographics.value('(NumberEmployees)[1]','INT') AS NumberEmployees,
+
+        --SCD-T1 
+        s.Demographics.value('(NumberEmployees)[1]','INT') AS EmployeeCount,
+        COALESCE(s.Demographics.value('(AnnualSales)[1]','MONEY'),0) AS AnnualSales,
+        COALESCE(s.Demographics.value('(AnnualRevenue)[1]','MONEY'),0) AS AnnualRevenue,
+        s.Demographics.value('(YearOpened)[1]', 'INT') AS YearOpened,
 
         --Metadata
         s.ModifiedDate,
@@ -360,13 +361,10 @@ AS
 
         --Change detection
         HASHBYTES('SHA2_256',CONCAT_WS('|',
-            COALESCE(s.Name,'NA'),
-            CAST(COALESCE(s.SalesPersonID,-1) AS VARCHAR(10)),
-            CONVERT(NVARCHAR(50),COALESCE(s.Demographics.value('(AnnualSales)[1]','MONEY'),0),2),
-            CONVERT(NVARCHAR(50),COALESCE(s.Demographics.value('(AnnualRevenue)[1]','MONEY'),0),2),
-            COALESCE(s.Demographics.value('(BusinessType)[1]','NVARCHAR(5)'),'NA'),
-            COALESCE(s.Demographics.value('(Specialty)[1]','NVARCHAR(5)'),'NA'),
-            s.Demographics.value('(YearOpened)[1]', 'INT'))) as RowHash
+                COALESCE(s.Name,'NA'),
+                CAST(COALESCE(s.SalesPersonID,-1) AS VARCHAR(10)),
+                COALESCE(s.Demographics.value('(BusinessType)[1]','NVARCHAR(5)'),'NA'),
+                COALESCE(s.Demographics.value('(Specialty)[1]','NVARCHAR(50)'),'NA'))) AS RowHash
 
     FROM STG.Sales_Store s;
 GO
@@ -376,9 +374,10 @@ AS
     SELECT
         --Keys
         s.BusinessEntityID AS SalesPersonNK,
+        --SCD-T2 Tracked
         COALESCE(s.TerritoryID,-1) AS TerritoryNK,
 
-        --SCD-T2 tracked
+        --SCD-T1 
         s.SalesQuota,
         s.Bonus,
         s.CommissionPct AS CommissionPercentage,
@@ -390,25 +389,41 @@ AS
         s.ExtractDatetime,
 
         --Change detection
-        HASHBYTES('SHA2_256',CONCAT_WS('|',
-            CONVERT(NVARCHAR(50),COALESCE(s.SalesQuota,0),2),
-            CONVERT(NVARCHAR(50),COALESCE(s.Bonus,0),2),
-            CONVERT(NVARCHAR(50),COALESCE(s.CommissionPct,0),2),
-            CONVERT(NVARCHAR(50),COALESCE(s.SalesYTD,0),2),
-            CONVERT(NVARCHAR(50),COALESCE(s.SalesLastYear,0),2)
-        )) AS RowHash
+        HASHBYTES('SHA2_256',CAST(COALESCE(s.TerritoryID,-1) AS VARCHAR(10))) AS RowHash
 
-    FROM STG.Sales_SalesPerson s
+    FROM STG.Sales_SalesPerson s;
 GO
 
-/*
-BELOW 
-IS
-CURRENT
-WORK
-TO
-FINISH
-*/
+CREATE OR ALTER VIEW INT.Sales_Territory
+AS
+    SELECT
+        --Keys
+        COALESCE(st.TerritoryID,-1) AS TerritoryNK,
+
+        --SCD-T2 tracked
+        COALESCE(st.[Name],'NA') AS TerritoryName,
+        COALESCE(st.CountryRegionCode,'NA') AS CountryRegionCode,
+        COALESCE(st.[Group],'NA') AS TerritoryGroup,
+
+        --SCD-T1
+        st.SalesYTD,
+        st.SalesLastYear,
+        st.CostYTD,
+        st.CostLastYear,
+
+        --Metadata
+        st.ModifiedDate,
+        st.ExtractDatetime,
+
+        --Change detection
+        HASHBYTES('SHA2_256',CONCAT_WS('|',
+            COALESCE(st.[Name],'NA'),
+            COALESCE(st.CountryRegionCode,'NA'),
+            COALESCE(st.[Group],'NA')
+            )) AS RowHash
+
+    FROM STG.Sales_SalesTerritory st;
+GO
 
 CREATE OR ALTER VIEW INT.Sales_Customer
 AS
@@ -425,7 +440,7 @@ AS
             WHEN c.StoreID IS NOT NULL THEN 'Store'
             ELSE 'NA' 
             END AS CustomerType,
-        c.AccountNumber,
+        COALESCE(c.AccountNumber,'NA') AS AccountNumber,
 
         --Store Fields
         st.StoreName,
@@ -434,7 +449,7 @@ AS
         st.BusinessType AS Store_BusinessType,
         st.Specialty AS Store_Specialty,
         st.YearOpened AS Store_YearOpened,
-        st.NumberEmployees AS Store_EmployeeCount,  
+        st.NumberEmployees AS Store_EmployeeCount,
 
         --Individual Customer Fields
         p.PersonTypeDescription,
@@ -465,13 +480,14 @@ AS
             COALESCE(p.FullName,'NA'),
             COALESCE(p.EmailAddress,'NA'),
             COALESCE(p.EmailPromotionSignUp,'NA')        
-        )) AS CustomerRowHash
+        )) AS RowHash
 
     FROM STG.Sales_Customer c
-    LEFT JOIN INT.Sales_Store st 
+        LEFT JOIN INT.Sales_Store st
         ON c.StoreID = st.StoreNK
-    LEFT JOIN INT.Person_Person p
-        ON c.PersonID = p.PersonNK
+        LEFT JOIN INT.Person_Person p
+        ON c.PersonID = p.PersonNK;
+GO
 
 CREATE OR ALTER VIEW INT.FactSales
 AS
