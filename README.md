@@ -37,7 +37,8 @@ Wrapped in try/catch with transaction rollback. Divided into multiple stages whe
 
 ## #️⃣Indexing
 - Dimensions contain nonclustered indexes to support time-based and time-agnostic joins
-- Fact tables contain nonclustered indexes on surrogate keys to support downstream joins by engineers/analysts 
+- Fact tables contain nonclustered indexes on surrogate keys to support downstream joins by engineers/analysts
+- Fact tables contain nonclustered columnstore indexes not strictly required for small tables, but to show knowledge
 
 
 
