@@ -107,16 +107,56 @@ AS
     FROM STG.Person_BusinessEntityAddress;
 GO
 
-CREATE OR ALTER VIEW INT.Person_CountryRegion
+CREATE OR ALTER VIEW INT.Address
 AS
     SELECT
-        CountryRegionCode AS CountryRegionNK,
-        Name AS CountryRegionName,
-        ModifiedDate,
-        ExtractDatetime,
-        RowHash
-    FROM STG.Person_CountryRegion;
+        --Keys
+        a.AddressID AS AddressNK,
+
+        --SCD-T1 (changed address gets a new AddressID at source)
+        a.AddressLine1,
+        a.AddressLine2,
+        a.City,
+        a.PostalCode,
+        a.SpatialLocation,
+        sp.StateProvinceNK,
+        sp.StateProvinceCode,
+        sp.StateProvinceName,
+        cr.CountryRegionNK,
+        cr.CountryRegionName,
+
+        --Metadata
+        a.ModifiedDate,
+        a.ExtractDatetime,
+
+        --Change detection (SpatialLocation excluded — GEOGRAPHY not hashed directly, per project convention)
+        HASHBYTES('SHA2_256', CONCAT_WS('|',
+            COALESCE(a.AddressLine1, 'NA'),
+            COALESCE(a.AddressLine2, 'NA'),
+            COALESCE(a.City, 'NA'),
+            COALESCE(a.PostalCode, 'NA'),
+            COALESCE(sp.StateProvinceCode, 'NA'),
+            COALESCE(sp.StateProvinceName, 'NA'),
+            COALESCE(cr.CountryRegionName, 'NA')
+        )) AS RowHash
+
+    FROM STG.Person_Address a
+        LEFT JOIN INT.Person_StateProvince sp
+        ON a.StateProvinceNK = sp.StateProvinceNK
+        LEFT JOIN INT.Person_CountryRegion cr
+        ON sp.CountryRegionNK = cr.CountryRegionNK;
 GO
+
+    CREATE OR ALTER VIEW INT.Person_CountryRegion
+    AS
+        SELECT
+            CountryRegionCode AS CountryRegionNK,
+            Name AS CountryRegionName,
+            ModifiedDate,
+            ExtractDatetime,
+            RowHash
+        FROM STG.Person_CountryRegion;
+    GO
 
 CREATE OR ALTER VIEW INT.Person_EmailAddress
 AS
@@ -270,6 +310,32 @@ AS
 GO
 
 ----------------------------
+---------PURCHASING---------
+----------------------------
+
+CREATE OR ALTER VIEW INT.Purchasing_ShipMethod
+AS
+    SELECT
+        --Keys
+        [ShipMethodID] AS ShipMethodNK,
+        --SCD-T2 Tracked
+        COALESCE([Name],'NA') AS ShipMethodName,
+        [ShipBase],
+        [ShipRate],
+        --Metadata
+        [ModifiedDate],
+        ExtractDatetime,
+        --Change detection
+        HASHBYTES('SHA2_256',CONCAT_WS('|',
+           COALESCE([Name],'NA'),
+           COALESCE(CONVERT(NVARCHAR(50),ShipBase,2),'NA'),
+           COALESCE(CONVERT(NVARCHAR(50),ShipRate,2),'NA')
+            )) AS RowHash
+    FROM STG.Purchasing_ShipMethod
+GO
+
+
+----------------------------
 -----------SALES------------
 ----------------------------
 
@@ -332,6 +398,125 @@ AS
         [ExtractDatetime] AS SalesOrderHeaderExtractedDateTime,
         [RowHash] AS SalesOrderHeaderHash
     FROM STG.Sales_SalesOrderHeader;
+GO
+
+CREATE OR ALTER VIEW INT.Sales_CreditCard
+AS
+    SELECT
+        --Keys
+        [CreditCardID] AS CreditCardNK,
+        --SCD-T1 (no fields worth SCD-T2 tracking)
+        COALESCE([CardType],'NA') AS CardType,
+        COALESCE([CardNumber],'NA') AS CardNumber,
+        [ExpMonth],
+        [ExpYear],
+        --Metadata
+        [ModifiedDate],
+        ExtractDatetime,
+        --Change detection
+        HASHBYTES('SHA2_256',CONCAT_WS('|',
+            COALESCE(CardType,'NA'),
+            COALESCE(CardNumber,'NA'),
+            CAST(COALESCE(ExpMonth,-1) AS NVARCHAR(50)),
+            CAST(COALESCE(ExpYear,-1) AS NVARCHAR(50))
+        )) As RowHash
+    FROM STG.Sales_CreditCard;
+GO
+
+CREATE OR ALTER VIEW INT.Sales_Currency
+AS
+    SELECT
+        [CurrencyCode],
+        [Name] AS CurrencyName,
+        [ModifiedDate],
+        [ExtractDatetime],
+        [RowHash]
+    FROM STG.Sales_Currency;
+GO
+
+CREATE OR ALTER VIEW INT.Sales_CountryRegionCurrency
+AS
+    SELECT
+        [CountryRegionCode],
+        [CurrencyCode],
+        [ModifiedDate],
+        ExtractDatetime,
+        RowHash
+    FROM STG.Sales_CountryRegionCurrency;
+GO
+
+CREATE OR ALTER VIEW INT.Sales_CurrencyRate
+AS
+    SELECT
+        --Keys
+        rate.[CurrencyRateID] AS CurrencyRateNK,
+
+        rate.[CurrencyRateDate],
+
+        --Currency FROM
+        rate.[FromCurrencyCode],
+        currF.[CurrencyName] AS FromCurrencyName,
+
+        --Currency TO
+        rate.[ToCurrencyCode],
+        currT.[CurrencyName] AS ToCurrencyName,
+
+        --Rates
+        rate.[AverageRate],
+        rate.[EndOfDayRate],
+
+        --Metadata
+        rate.[ModifiedDate],
+        rate.[ExtractDatetime],
+
+        --Change detection
+        HASHBYTES('SHA2_256',CONCAT_WS('|',
+            COALESCE(CONVERT(NVARCHAR(50),rate.AverageRate,2),'NA'),
+            COALESCE(CONVERT(NVARCHAR(50),rate.EndOfDayRate,2),'NA')
+            )) AS RowHash 
+
+    FROM STG.Sales_CurrencyRate rate
+
+    LEFT JOIN INT.Sales_Currency currF
+        ON rate.FromCurrencyCode = currF.CurrencyCode
+
+    LEFT JOIN INT.Sales_Currency currT
+        ON rate.ToCurrencyCode = currT.CurrencyCode;
+GO
+
+CREATE OR ALTER VIEW INT.Sales_SpecialOffer
+AS
+    SELECT
+        --Keys
+        [SpecialOfferID] AS SpecialOfferNK,
+
+        --SCD-T2 tracked
+        COALESCE([Description],'NA') AS [Description],
+        COALESCE([DiscountPct],0) AS DiscountPercentage,
+        COALESCE([Type],'NA') AS OfferType,
+        COALESCE([Category],'NA') AS Category,
+        [StartDate],
+        [EndDate],
+        COALESCE([MinQty],0) AS MinQty,
+        COALESCE([MaxQty],0) AS MinQty,
+
+        --Metadata
+        [ModifiedDate],
+        [ExtractDatetime],
+
+        --Change detection
+        HASHBYTES('SHA2_256', CONCAT_WS('|',
+            COALESCE([Description],'NA'),
+            CONVERT(NVARCHAR(50),COALESCE([DiscountPct],0),2),
+            COALESCE([Type],'NA'),
+            COALESCE([Category],'NA'),
+            COALESCE(CONVERT(NVARCHAR(30),[StartDate],126),'NA'),
+            COALESCE(CONVERT(NVARCHAR(30),[EndDate],126),'NA'),
+            COALESCE(CAST([MinQty] AS VARCHAR(50)),'NA'),
+            COALESCE(CAST([MaxQty] AS VARCHAR(50)),'NA')
+        ))
+
+    FROM STG.Sales_SpecialOffer;
 GO
 
 CREATE OR ALTER VIEW INT.Sales_Store

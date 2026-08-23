@@ -196,6 +196,82 @@ BEGIN
 END;
 GO
 
+IF OBJECT_ID (N'MRT.DIM_Address', N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.DIM_Address
+    (
+        --Keys
+        [AddressSK] INT IDENTITY(1,1) PRIMARY KEY,
+        [AddressNK] INT NOT NULL,
+
+        --SCD-T1
+        [AddressLine1] NVARCHAR(60) NULL,
+        [AddressLine2] NVARCHAR(60) NULL,
+        [City] NVARCHAR(30) NULL,
+        [PostalCode] NVARCHAR(15) NULL,
+        [SpatialLocation] GEOGRAPHY NULL,
+        [StateProvinceNK] INT NULL,
+        [StateProvinceCode] NCHAR(3) NULL,
+        [StateProvinceName] NVARCHAR(50) NULL,
+        [CountryRegionNK] NVARCHAR(3) NULL,
+        [CountryRegionName] NVARCHAR(50) NULL,
+
+        --Metadata
+        [ModifiedDate] DATETIME2 NULL,
+        [ExtractDatetime] DATETIME2 NULL DEFAULT GETDATE(),
+
+        --Change detection
+        [RowHash] VARBINARY(32) NULL
+    )
+
+    --Index fields used for date-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_Address_AddressNK
+    ON MRT.DIM_Address (AddressNK);
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_Address ON;
+
+INSERT INTO MRT.DIM_Address
+    (
+    AddressSK,
+    AddressNK,
+    AddressLine1,
+    AddressLine2,
+    City,
+    PostalCode,
+    SpatialLocation,
+    StateProvinceNK,
+    StateProvinceCode,
+    StateProvinceName,
+    CountryRegionNK,
+    CountryRegionName,
+    ModifiedDate,
+    ExtractDatetime,
+    RowHash
+    )
+VALUES
+    (
+        -1,
+        -1,
+        'NA',
+        'NA',
+        'NA',
+        'NA',
+        NULL,
+        -1,
+        'NA',
+        'NA',
+        'NA',
+        'NA',
+        '1900-01-01',
+        '1900-01-01',
+        HASHBYTES('SHA2_256', 'FallbackEntityRow')
+    );
+
+SET IDENTITY_INSERT MRT.DIM_Address OFF;
+GO
+
 SET IDENTITY_INSERT MRT.DIM_Product ON;
 INSERT INTO MRT.DIM_Product
     (
@@ -279,6 +355,76 @@ VALUES
 SET IDENTITY_INSERT MRT.DIM_Product OFF;
 GO
 
+IF OBJECT_ID (N'MRT.DIM_ShipMethod',N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.DIM_ShipMethod
+    (
+        --Keys
+        [ShipMethodSK] INT IDENTITY(1,1) PRIMARY KEY,
+        [ShipMethodNK] INT NOT NULL,
+        --SCD-T2 Tracked
+        [ShipMethodName] NVARCHAR(50) NOT NULL,
+        [ShipBase] MONEY NOT NULL,
+        [ShipRate] MONEY NOT NULL,
+        --Metadata
+        [ModifiedDate] DATETIME2 NULL,
+        ExtractDatetime DATETIME2 NULL DEFAULT GETDATE(),
+        --Change detection
+        RowHash VARBINARY(32) NULL,
+        --Tracking
+        ValidFrom DATETIME2(7) NOT NULL,
+        ValidTo DATETIME2(7) NULL,
+        Valid BIT DEFAULT 1 NOT NULL
+    )
+
+    --Index fields used for time-agnostic joins
+    CREATE NONCLUSTERED INDEX IX_DIM_ShipMethod_ShipMethodNK_Valid
+    ON MRT.DIM_ShipMethod(ShipMethodNK,Valid);
+
+    --Index fields used for time-based joins
+    CREATE NONCLUSTERED INDEX IX_DIM_ShipMethod_ShipMethodNK_ValidFrom_ValidTo
+    ON MRT.DIM_ShipMethod(ShipMethodNK,ValidFrom,ValidTo);
+
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_ShipMethod ON;
+
+INSERT INTO MRT.DIM_ShipMethod
+    (
+    [ShipMethodSK],
+    [ShipMethodNK],
+    [ShipMethodName],
+    [ShipBase],
+    [ShipRate],
+    [ModifiedDate],
+    [ExtractDatetime],
+    [RowHash],
+    [ValidFrom],
+    [ValidTo],
+    [Valid]
+    )
+VALUES
+    (
+        -1,
+        -1,
+        'NA',
+        NULL,
+        NULL,
+        '1900-01-01',
+        '1900-01-01',
+        HASHBYTES('SHA2_256','FallbackEntityRow'),
+        '1900-01-01',
+        NULL,
+        1
+    )
+
+SET IDENTITY_INSERT MRT.DIM_ShipMethod OFF;
+GO
+
+
+
+
 IF OBJECT_ID (N'MRT.DIM_SalesPerson',N'U') IS NULL
 BEGIN
     CREATE TABLE MRT.DIM_SalesPerson
@@ -357,6 +503,205 @@ VALUES
 
 SET IDENTITY_INSERT MRT.DIM_SalesPerson OFF;
 GO
+
+IF OBJECT_ID (N'MRT.DIM_CreditCard',N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.DIM_CreditCard
+    (
+        [CreditCardSK] INT IDENTITY(1,1) PRIMARY KEY,
+        [CreditCardNK] INT NOT NULL,
+        [CardType] NVARCHAR(50) NULL,
+        [CardNumber] NVARCHAR(25) NULL,
+        [ExpMonth] TINYINT NULL,
+        [ExpYear] SMALLINT NULL,
+        [ModifiedDate] DATETIME2 NULL,
+        [ExtractDatetime] DATETIME2 NULL DEFAULT GETDATE (),
+        [RowHash] VARBINARY(32) NULL
+    )
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_CreditCard ON;
+
+INSERT INTO MRT.DIM_CreditCard
+    (
+        [CreditCardSK],
+        [CreditCardNK],
+        [CardType],
+        [CardNumber],
+        [ExpMonth],
+        [ExpYear],
+        [ModifiedDate],
+        [ExtractDatetime],
+        [RowHash]   
+    )
+    VALUES
+    (
+        -1,
+        -1,
+        'NA',
+        'NA',
+        NULL,
+        NULL,
+        '1900-01-01',
+        '1900-01-01',
+        HASHBYTES('SHA2_256','FallbackEntityRow')
+    )
+    SET IDENTITY_INSERT MRT.DIM_CreditCard OFF;
+GO
+
+IF OBJECT_ID (N'MRT.DIM_CurrencyRate',N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.DIM_CurrencyRate
+    (
+        [CurrencyRateSK] INT IDENTITY(1,1) PRIMARY KEY,
+        [CurrencyRateNK] INT NOT NULL,
+        [CurrencyRateDate] DATETIME2 NULL,
+
+        --Currency FROM
+        [FromCurrencyCode] NVARCHAR(3) NULL,
+        [FromCurrencyName] NVARCHAR(50) NULL,
+
+        --Currency TO
+        [ToCurrencyCode] NVARCHAR(3) NULL,
+        [ToCurrencyName] NVARCHAR(50) NULL,
+
+        --Rates
+        [AverageRate] MONEY NULL,
+        [EndOfDayRate] MONEY NULL,
+
+        --Metadata
+        [ModifiedDate] DATETIME2 NULL,
+        [ExtractDatetime] DATETIME2 NOT NULL,
+
+        --Change detection
+        [RowHash] VARBINARY(32) NOT NULL
+    )
+
+    --Index for time-agnostic joins and lookups
+    CREATE NONCLUSTERED INDEX IX_DIM_CURRENCYRATE_CURRENCYRATENK
+    ON MRT.DIM_CurrencyRate(CurrencyRateNK);
+
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_CurrencyRate ON;
+
+INSERT INTO MRT.DIM_CurrencyRate
+    (
+    [CurrencyRateSK],
+    [CurrencyRateNK],
+    [CurrencyRateDate],
+    [FromCurrencyCode],
+    [FromCurrencyName],
+    [ToCurrencyCode],
+    [ToCurrencyName],
+    [AverageRate],
+    [EndOfDayRate],
+    [ModifiedDate],
+    [ExtractDatetime],
+    [RowHash]  
+    )
+    VALUES
+    (
+        -1,
+        -1,
+        '1900-01-01',
+        'NA',
+        'NA',
+        'NA',
+        'NA',
+        NULL,
+        NULL,
+        '1900-01-01',
+        '1900-01-01',
+        HASHBYTES('SHA2_256','FallbackEntityRow')
+    )
+    SET IDENTITY_INSERT MRT.DIM_CurrencyRate OFF;
+GO
+
+IF OBJECT_ID (N'MRT.DIM_SpecialOffer',N'U') IS NULL
+BEGIN
+    CREATE TABLE MRT.Dim_SpecialOffer
+    (
+        --Keys
+        [SpecialOfferSK] INT IDENTITY(1,1) PRIMARY KEY,
+        [SpecialOfferNK] INT NOT NULL,
+
+        --SCD-T2 tracked
+        [Description] NVARCHAR(255) NOT NULL,
+        [DiscountPercentage] smallmoney NOT NULL,
+        [OfferType] NVARCHAR(50) NOT NULL,
+        [Category] NVARCHAR(50) NOT NULL,
+        [StartDate] DATETIME2 NULL,
+        [EndDate] DATETIME2 NULL,
+        [MinQty] INT NOT NULL,
+        [MaxQty] INT NOT NULL,
+
+        --Metadata
+        [ModifiedDate] DATETIME2 NULL,
+        [ExtractDatetime] DATETIME2 NULL DEFAULT GETDATE(),
+
+        --Change detection
+        [RowHash] VARBINARY(32) NULL,
+
+        --Tracking
+        [ValidFrom] DATETIME2 NOT NULL,
+        [ValidTo] DATETIME2 NULL,
+        [Valid] BIT DEFAULT 1 NOT NULL
+    )
+
+    CREATE NONCLUSTERED INDEX IX_DIM_SpecialOffer_SpecialOfferNK_Valid
+    ON MRT.DIM_SpecialOffer(SpecialOfferNK,Valid);
+
+    CREATE NONCLUSTERED INDEX IX_DIM_SpecialOffer_SpecialOfferNK_ValidFrom_ValidTo
+    ON MRT.DIM_SpecialOffer(SpecialOfferNK,ValidFrom,ValidTo);
+
+END;
+GO
+
+SET IDENTITY_INSERT MRT.DIM_SpecialOffer ON;
+INSERT INTO MRT.DIM_SpecialOffer
+    (
+    SpecialOfferSK,
+    SpecialOfferNK,
+    [Description],
+    DiscountPercentage,
+    OfferType,
+    Category,
+    StartDate,
+    EndDate,
+    MinQty,
+    MaxQty,
+    ModifiedDate,
+    ExtractDatetime,
+    RowHash,
+    ValidFrom,
+    ValidTo,
+    Valid
+    )
+VALUES
+    (
+        -1,
+        -1,
+        'NA',
+        0,
+        'NA',
+        'NA',
+        NULL,
+        NULL,
+        0,
+        0,
+        '1900-01-01',
+        '1900-01-01',
+        HASHBYTES('SHA2_256','FallbackEntityRow'),
+        '1900-01-01',
+        NULL,
+        1
+    )
+SET IDENTITY_INSERT MRT.DIM_SpecialOffer OFF;
+GO
+
 
 IF OBJECT_ID (N'MRT.DIM_Store',N'U') IS NULL
 BEGIN
@@ -641,15 +986,15 @@ BEGIN
         [SalesOrderNK] INT NOT NULL,
         [SalesOrderDetailNK] INT NOT NULL,
         [ProductSK] INT NOT NULL,
-        [SpecialOfferNK] INT NOT NULL,
-        [BillToAddressNK] INT NOT NULL,
-        [ShipToAddressNK] INT NOT NULL,
-        [ShipMethodNK] INT NOT NULL,
-        [CreditCardNK] INT NOT NULL,
+        [SpecialOfferSK] INT NOT NULL,
+        [BillToAddressSK] INT NOT NULL,
+        [ShipToAddressSK] INT NOT NULL,
+        [ShipMethodSK] INT NOT NULL,
+        [CreditCardSK] INT NOT NULL,
         [CustomerSK] INT NOT NULL,
         [SalesPersonSK] INT NOT NULL,
         [TerritorySK] INT NOT NULL,
-        [CurrencyRateNK] INT NOT NULL,
+        [CurrencyRateSK] INT NOT NULL,
 
         --Header
         [RevisionNumber] TINYINT NULL,
@@ -705,10 +1050,28 @@ BEGIN
     CREATE NONCLUSTERED INDEX IX_FactSales_TerritorySK
     ON MRT.Fact_Sales(TerritorySK);
 
+    CREATE NONCLUSTERED INDEX IX_FactSales_SpecialOfferSK
+    ON MRT.Fact_Sales(SpecialOfferSK);
+
+    CREATE NONCLUSTERED INDEX IX_FactSales_ShipMethodSK
+    ON MRT.Fact_Sales(ShipMethodSK);
+
+    CREATE NONCLUSTERED INDEX IX_FactSales_CreditCardSK
+    ON MRT.Fact_Sales(CreditCardSK);
+
+    CREATE NONCLUSTERED INDEX IX_FactSales_BillToAddressSK
+    ON MRT.Fact_Sales(BillToAddressSK);
+
+    CREATE NONCLUSTERED INDEX IX_FactSales_ShipToAddressSK
+    ON MRT.Fact_Sales(ShipToAddressSK);
+
+    CREATE NONCLUSTERED INDEX IX_FactSales_CurrencyRateSK
+    ON MRT.Fact_Sales(CurrencyRateSK);
+
     /**Below index overkill for AdventureWorks but
     included as example of columnstore to improve performance
     on common expected analyst quieries like sum(linetotal)
-    by orderdate, avg(linetotal) by SalesPerson, etc...*//
+    by orderdate, avg(linetotal) by SalesPerson, etc...*/
     CREATE NONCLUSTERED COLUMNSTORE INDEX IX_FactSales_Columnstore
     ON MRT.Fact_Sales(
         ProductSK,

@@ -12,6 +12,10 @@ GO
 EXECUTE dbo.sp_add_job @job_name = N'Populate_Marts';
 GO
 
+------------------------
+-------DIMENSIONS-------
+------------------------
+
 EXECUTE sp_add_jobstep
     @job_name = N'Populate_Marts',
     @database_name = N'DWH_ONPREM',
@@ -47,6 +51,7 @@ EXECUTE sp_add_jobstep
     @retry_interval = 5,
     @on_fail_action = 2,
     @flags = 6;
+GO
 
 EXECUTE sp_add_jobstep
     @job_name = N'Populate_Marts',
@@ -58,6 +63,7 @@ EXECUTE sp_add_jobstep
     @retry_interval = 5,
     @on_fail_action = 2,
     @flags = 6;
+GO
 
 EXECUTE sp_add_jobstep
     @job_name = N'Populate_Marts',
@@ -69,6 +75,7 @@ EXECUTE sp_add_jobstep
     @retry_interval = 5,
     @on_fail_action = 2,
     @flags = 6;
+GO
 
 EXECUTE sp_add_jobstep
     @job_name = N'Populate_Marts',
@@ -80,6 +87,7 @@ EXECUTE sp_add_jobstep
     @retry_interval = 5,
     @on_fail_action = 2,
     @flags = 6;
+GO
 
 EXECUTE sp_add_jobstep
     @job_name = N'Populate_Marts',
@@ -91,6 +99,71 @@ EXECUTE sp_add_jobstep
     @retry_interval = 5,
     @on_fail_action = 2,
     @flags = 6;
+GO
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_SpecialOffer',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_SPECIALOFFER',
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+GO
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_CreditCard',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_CREDITCARD',
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+GO
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_ShipMethod',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_SHIPMETHOD',
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+GO
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_Address',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_ADDRESS',
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+GO
+
+EXECUTE sp_add_jobstep
+    @job_name = N'Populate_Marts',
+    @database_name = N'DWH_ONPREM',
+    @step_name = N'Populate MRT.DIM_CurrencyRate',
+    @subsystem = N'TSQL',
+    @command = N'EXEC MRT.USP_LOAD_DIM_CURRENCYRATE',
+    @retry_attempts = 3,
+    @retry_interval = 5,
+    @on_fail_action = 2,
+    @flags = 6;
+GO
+
+------------------------
+---------FACTS----------
+------------------------
 
 EXECUTE sp_add_jobstep
     @job_name = N'Populate_Marts',
@@ -102,6 +175,7 @@ EXECUTE sp_add_jobstep
     @retry_interval = 5,
     @on_fail_action = 2,
     @flags = 6;
+GO
 
 EXECUTE dbo.sp_add_schedule
     @schedule_name = N'RunDaily',

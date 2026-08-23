@@ -16,10 +16,11 @@ $ServerInstance = "$Server,$Port"
 $DeploymentSteps = @(
     @{ Name = "Database & Schemas"; Path = ".\scripts\01_init_db.sql"; UseTargetDB = $false },
     @{ Name = "Staging Tables"; Path = ".\scripts\02_create_tables_staging.sql"; UseTargetDB = $true },
-    @{ Name = "Intermediate Views"; Path = ".\scripts\03_create_views_intermediate.sql"; UseTargetDB = $true },
-    @{ Name = "Mart Tables"; Path = ".\scripts\04_create_tables_mart.sql"; UseTargetDB = $true },
-    @{ Name = "Procedures"; Path = ".\scripts\05_create_procedures.sql"; UseTargetDB = $true },
-    @{ Name = "AgentJobs"; Path = ".\scripts\06_create_agent_jobs.sql"; UseTargetDB = $false }
+    @{ Name = "Operations Tables"; Path = ".\scripts\03_create_tables_etl.sql"; UseTargetDB = $true },
+    @{ Name = "Intermediate Views"; Path = ".\scripts\04_create_views_intermediate.sql"; UseTargetDB = $true },
+    @{ Name = "Mart Tables"; Path = ".\scripts\05_create_tables_mart.sql"; UseTargetDB = $true },
+    @{ Name = "Procedures"; Path = ".\scripts\06_create_procedures.sql"; UseTargetDB = $true },
+    @{ Name = "AgentJobs"; Path = ".\scripts\07_create_agent_jobs.sql"; UseTargetDB = $false }
 )
 
 foreach ($Step in $DeploymentSteps) {

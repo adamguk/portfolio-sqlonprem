@@ -170,6 +170,84 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE MRT.USP_LOAD_DIM_ADDRESS
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        --Overwrite changed rows in place (Type 1 — no history kept)
+        UPDATE dim
+        SET
+            dim.AddressLine1 = new.AddressLine1,
+            dim.AddressLine2 = new.AddressLine2,
+            dim.City = new.City,
+            dim.PostalCode = new.PostalCode,
+            dim.SpatialLocation = new.SpatialLocation,
+            dim.StateProvinceNK = new.StateProvinceNK,
+            dim.StateProvinceCode = new.StateProvinceCode,
+            dim.StateProvinceName = new.StateProvinceName,
+            dim.CountryRegionNK = new.CountryRegionNK,
+            dim.CountryRegionName = new.CountryRegionName,
+            dim.ModifiedDate = new.ModifiedDate,
+            dim.ExtractDatetime = new.ExtractDatetime,
+            dim.RowHash = new.RowHash
+        FROM MRT.DIM_Address dim
+            INNER JOIN INT.Address new
+            ON dim.AddressNK = new.AddressNK
+        WHERE dim.RowHash <> new.RowHash;
+
+        --Insert brand-new addresses
+        INSERT INTO MRT.DIM_Address
+            (
+            AddressNK,
+            AddressLine1,
+            AddressLine2,
+            City,
+            PostalCode,
+            SpatialLocation,
+            StateProvinceNK,
+            StateProvinceCode,
+            StateProvinceName,
+            CountryRegionNK,
+            CountryRegionName,
+            ModifiedDate,
+            ExtractDatetime,
+            RowHash
+             )
+        SELECT
+            new.AddressNK,
+            new.AddressLine1,
+            new.AddressLine2,
+            new.City,
+            new.PostalCode,
+            new.SpatialLocation,
+            new.StateProvinceNK,
+            new.StateProvinceCode,
+            new.StateProvinceName,
+            new.CountryRegionNK,
+            new.CountryRegionName,
+            new.ModifiedDate,
+            new.ExtractDatetime,
+            new.RowHash
+        FROM INT.Address new
+            LEFT JOIN MRT.DIM_Address dim
+            ON new.AddressNK = dim.AddressNK
+        WHERE dim.AddressSK IS NULL;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+GO
+
 CREATE OR ALTER PROCEDURE MRT.USP_LOAD_DIM_PRODUCT
 AS
 BEGIN
@@ -298,6 +376,192 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE MRT.USP_LOAD_DIM_SHIPMETHOD
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+    DECLARE @ExecutionTime DATETIME2(7) = GETDATE();
+
+    BEGIN TRY
+        BEGIN TRANSACTION
+            --Invalidate out-of-date SCD-T2 records
+            UPDATE dim
+                SET
+                    dim.ValidTo = @ExecutionTime,
+                    dim.Valid = 0
+                FROM MRT.DIM_ShipMethod dim
+        INNER JOIN INT.Purchasing_ShipMethod new
+        ON dim.ShipMethodNK = new.ShipMethodNK
+                    WHERE dim.Valid = 1
+        AND dim.RowHash <> new.RowHash;
+
+            --Insert new & updated record
+            INSERT INTO MRT.DIM_ShipMethod
+        (
+        [ShipMethodNK],
+        [ShipMethodName],
+        [ShipBase],
+        [ShipRate],
+        [ModifiedDate],
+        [ExtractDatetime],
+        [RowHash],
+        [ValidFrom],
+        [ValidTo],
+        [Valid]
+        )
+    SELECT
+        new.[ShipMethodNK],
+        new.[ShipMethodName],
+        new.[ShipBase],
+        new.[ShipRate],
+        new.[ModifiedDate],
+        new.[ExtractDatetime],
+        new.[RowHash],
+        @ExecutionTime AS ValidFrom,
+        NULL AS ValidTo,
+        1 AS Valid
+    FROM INT.Purchasing_ShipMethod new
+        LEFT JOIN MRT.DIM_ShipMethod dim
+        ON new.ShipMethodNK = dim.ShipMethodNK
+            AND dim.Valid = 1
+    WHERE dim.ShipMethodSK IS NULL;          
+    COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE MRT.USP_LOAD_DIM_CREDITCARD
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION
+            --scd-t1 updates
+            UPDATE dim
+                SET
+                    dim.[CardType] = new.[CardType],
+                    dim.[CardNumber] = new.[CardNumber],
+                    dim.[ExpMonth] = new.[ExpMonth],
+                    dim.[ExpYear] = new.[ExpYear],
+                    dim.[ModifiedDate] = new.[ModifiedDate],
+                    dim.[ExtractDatetime] = new.[ExtractDatetime],
+                    dim.[RowHash] = new.[RowHash]
+            FROM MRT.DIM_CreditCard dim
+            INNER JOIN INT.Sales_CreditCard new
+            ON dim.CreditCardNK = new.CreditCardNK
+            WHERE dim.RowHash <> new.RowHash;
+
+            --new records
+            INSERT INTO MRT.DIM_CreditCard
+            (
+            [CreditCardNK],
+            [CardType],
+            [CardNumber],
+            [ExpMonth],
+            [ExpYear],
+            [ModifiedDate],
+            [ExtractDatetime],
+            [RowHash]  
+            )
+            SELECT
+                new.[CreditCardNK],
+                new.[CardType],
+                new.[CardNumber],
+                new.[ExpMonth],
+                new.[ExpYear],
+                new.[ModifiedDate],
+                new.[ExtractDatetime],
+                new.[RowHash]
+            FROM INT.Sales_CreditCard new
+            LEFT JOIN MRT.DIM_CreditCard dim
+                ON new.CreditCardNK = dim.CreditCardNK
+            WHERE dim.CreditCardSK IS NULL;
+        COMMIT TRANSACTION;
+    END TRY
+
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+            THROW;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE MRT.USP_LOAD_DIM_CURRENCYRATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+    DECLARE @ExecutionTime DATETIME2(7) = GETDATE();
+
+    BEGIN TRY
+        BEGIN TRANSACTION
+            UPDATE dim
+                SET 
+                    dim.[CurrencyRateDate] = new.[CurrencyRateDate],
+                    dim.[FromCurrencyCode] = new.[FromCurrencyCode],
+                    dim.[FromCurrencyName] = new.[FromCurrencyName],
+                    dim.[ToCurrencyCode] = new.[ToCurrencyCode],
+                    dim.[ToCurrencyName] = new.[ToCurrencyName],
+                    dim.[AverageRate] = new.[AverageRate],
+                    dim.[EndOfDayRate] = new.[EndOfDayRate],
+                    dim.[ModifiedDate] = new.[ModifiedDate],
+                    dim.[ExtractDatetime] = new.[ExtractDatetime],
+                    dim.[RowHash] = new.[RowHash]
+            FROM MRT.DIM_CurrencyRate dim
+            INNER JOIN INT.Sales_CurrencyRate new
+                ON dim.CurrencyRateNK = new.CurrencyRateNK
+            WHERE dim.RowHash <> new.RowHash;
+
+            INSERT INTO MRT.DIM_CurrencyRate
+            (
+            [CurrencyRateNK],
+            [CurrencyRateDate],
+            [FromCurrencyCode],
+            [FromCurrencyName],
+            [ToCurrencyCode],
+            [ToCurrencyName],
+            [AverageRate],
+            [EndOfDayRate],
+            [ModifiedDate],
+            [ExtractDatetime],
+            [RowHash]
+            )
+            SELECT
+                new.[CurrencyRateNK],
+                new.[CurrencyRateDate],
+                new.[FromCurrencyCode],
+                new.[FromCurrencyName],
+                new.[ToCurrencyCode],
+                new.[ToCurrencyName],
+                new.[AverageRate],
+                new.[EndOfDayRate],
+                new.[ModifiedDate],
+                new.[ExtractDatetime],
+                new.[RowHash]
+            FROM INT.Sales_CurrencyRate new
+            LEFT JOIN MRT.DIM_CurrencyRate dim
+            ON new.CurrencyRateNK = dim.CurrencyRateNK
+            WHERE dim.CurrencyRateSK IS NULL;
+
+            COMMIT TRANSACTION;
+        END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+GO
+
 CREATE OR ALTER PROCEDURE MRT.USP_LOAD_DIM_SALESPERSON
 AS
 BEGIN
@@ -380,6 +644,74 @@ BEGIN
         IF @@TRANCOUNT > 0 
             ROLLBACK TRANSACTION;
         THROW; 
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE MRT.USP_LOAD_DIM_SPECIALOFFER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+    DECLARE @ExecutionTime DATETIME2(7) = GETDATE();
+
+    BEGIN TRY
+        BEGIN TRANSACTION
+            UPDATE dim
+                SET dim.ValidTo = @ExecutionTime,
+                dim.Valid = 0
+            FROM MRT.DIM_SpecialOffer dim
+        INNER JOIN INT.Sales_SpecialOffer new
+        ON dim.SpecialOfferNK = new.SpecialOfferNK
+            WHERE dim.Valid = 1
+        AND dim.RowHash <> new.RowHash;
+
+        INSERT INTO MRT.DIM_SpecialOffer
+        (
+        SpecialOfferNK,
+        [Description],
+        DiscountPercentage,
+        OfferType,
+        Category,
+        StartDate,
+        EndDate,
+        MinQty,
+        MaxQty,
+        ModifiedDate,
+        ExtractDatetime,
+        RowHash,
+        ValidFrom,
+        ValidTo,
+        Valid
+        )
+    SELECT
+        new.SpecialOfferNK,
+        new.[Description],
+        new.DiscountPercentage,
+        new.OfferType,
+        new.Category,
+        new.StartDate,
+        new.EndDate,
+        new.MinQty,
+        new.MaxQty,
+        new.ModifiedDate,
+        new.ExtractDatetime,
+        new.RowHash,
+        @ExecutionTime AS ValidFrom,
+        NULL AS ValidTo,
+        1 AS Valid
+    FROM INT.Sales_SpecialOffer new
+        LEFT JOIN MRT.DIM_SpecialOffer dim
+        ON new.SpecialOfferNK = dim.SpecialOfferNK
+            AND dim.Valid = 1
+    WHERE dim.SpecialOfferSK IS NULL;
+
+    COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+            THROW;
     END CATCH
 END;
 GO
@@ -668,15 +1000,15 @@ BEGIN
             UPDATE fct
             SET
                 fct.ProductSK = p.ProductSK,
-                fct.SpecialOfferNK = new.SpecialOfferNK,
-                fct.BillToAddressNK = new.BillToAddressNK,
-                fct.ShipToAddressNK = new.ShipToAddressNK,
-                fct.ShipMethodNK = new.ShipMethodNK,
-                fct.CreditCardNK = new.CreditCardNK,
+                fct.SpecialOfferSK = so.SpecialOfferSK,
+                fct.BillToAddressSK = bill.AddressSK,
+                fct.ShipToAddressSK = ship.AddressSK,
+                fct.ShipMethodSK = sm.ShipMethodSK,
+                fct.CreditCardSK = cc.CreditCardSK,
                 fct.CustomerSK = c.CustomerSK,
                 fct.SalesPersonSK = sp.SalesPersonSK,
                 fct.TerritorySK = t.TerritorySK,
-                fct.CurrencyRateNK = new.CurrencyRateNK,
+                fct.CurrencyRateSK = new.CurrencyRateSK,
 
                 --Header
                 fct.RevisionNumber = new.RevisionNumber,
@@ -734,7 +1066,29 @@ BEGIN
         ON new.TerritoryNK = t.TerritoryNK
             AND new.OrderDate >= t.ValidFrom
             AND (new.OrderDate < t.ValidTo OR t.ValidTo IS NULL)
-        
+
+        LEFT JOIN MRT.DIM_SpecialOffer so
+        ON new.SpecialOfferNK = so.SpecialOfferNK
+            AND new.OrderDate >= so.ValidFrom
+            AND (new.OrderDate < so.ValidTo OR so.ValidTo IS NULL)
+
+        LEFT JOIN MRT.DIM_ShipMethod sm
+        ON new.ShipMethodNK = sm.ShipMethodNK   
+            AND new.OrderDate >= sm.ValidFrom
+            AND (new.OrderDate < sm.ValidTo OR sm.ValidTo IS NULL)
+
+        LEFT JOIN MRT.DIM_CreditCard cc
+        ON new.CreditCardNK = cc.CreditCardNK
+
+        LEFT JOIN MRT.DIM_Address bill
+        ON new.BillToAddressNK = bill.AddressNK
+
+        LEFT JOIN MRT.DIM_Address ship
+        ON new.ShipToAddressNK = ship.AddressNK
+
+        LEFT JOIN MRT.DIM_CurrencyRate rate
+        ON new.CurrencyRateNK = rate.CurrencyRateNK
+
         WHERE fct.FactSalesHash <> new.FactSalesHash;
 
             --INSERT new records
@@ -743,15 +1097,15 @@ BEGIN
         SalesOrderNK,
         SalesOrderDetailNK,
         ProductSK,
-        SpecialOfferNK,
-        BillToAddressNK,
-        ShipToAddressNK,
-        ShipMethodNK,
-        CreditCardNK,
+        SpecialOfferSK,
+        BillToAddressSK,
+        ShipToAddressSK,
+        ShipMethodSK,
+        CreditCardSK,
         CustomerSK,
         SalesPersonSK,
         TerritorySK,
-        CurrencyRateNK,
+        CurrencyRateSK,
 
         --Header
         RevisionNumber,
@@ -791,15 +1145,15 @@ BEGIN
         new.SalesOrderNK,
         new.SalesOrderDetailNK,
         p.ProductSK,
-        new.SpecialOfferNK,
-        new.BillToAddressNK,
-        new.ShipToAddressNK,
-        new.ShipMethodNK,
-        new.CreditCardNK,
+        so.SpecialOfferSK,
+        bill.BillToAddressSK,
+        ship.ShipToAddressSK,
+        sm.ShipMethodSK,
+        cc.CreditCardSK,
         c.CustomerSK,
         sp.SalesPersonSK,
         t.TerritorySK,
-        new.CurrencyRateNK,
+        rate.CurrencyRateSK,
 
         --Header
         new.RevisionNumber,
@@ -857,6 +1211,28 @@ BEGIN
         ON new.TerritoryNK = t.TerritoryNK
             AND new.OrderDate >= t.ValidFrom
             AND (new.OrderDate < t.ValidTo OR t.ValidTo IS NULL)
+
+        LEFT JOIN MRT.DIM_SpecialOffer so
+        ON new.SpecialOfferNK = so.SpecialOfferNK
+            AND new.OrderDate >= so.ValidFrom
+            AND (new.OrderDate < so.ValidTo OR so.ValidTo IS NULL)
+
+        LEFT JOIN MRT.DIM_ShipMethod sm
+        ON new.ShipMethodNK = sm.ShipMethodNK
+            AND new.OrderDate >= sm.ValidFrom
+            AND (new.OrderDate < sm.ValidTo OR sm.ValidTo IS NULL)
+
+        LEFT JOIN MRT.DIM_CreditCard cc
+        ON new.CreditCardNK = cc.CreditCardNK
+
+        LEFT JOIN MRT.DIM_Address bill
+        ON new.BillToAddressNK = bill.AddressNK
+
+        LEFT JOIN MRT.DIM_Address ship
+        ON new.ShipToAddressNK = ship.AddressNK
+
+        LEFT JOIN MRT.DIM_CurrencyRate rate
+        ON new.CurrencyRateNK = rate.CurrencyRateNK
 
     WHERE fct.FactSalesSK IS NULL;
             COMMIT TRANSACTION;
