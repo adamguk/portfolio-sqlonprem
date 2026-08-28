@@ -46,7 +46,7 @@ Appropriate patterns applied according to need  per table, including:
 - Fact tables contain nonclustered indexes on surrogate keys to support downstream joins by engineers/analysts
 - Fact tables contain nonclustered columnstore indexes not strictly required for small tables, but to show knowledge
 
-##▶️Deployment
+## ▶️Deployment
 Managed via Power shell script. Applies server division of interests (server for dB, server for SSIS). **All scripts included in deployment written for idempotency.**. Deployment script creates database, schemas, tables, stored procedures, SSIS artifacts, agents, and rbac. 
 
 # Pipeline
