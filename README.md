@@ -4,16 +4,15 @@
 ![Docker 4.84](https://img.shields.io/badge/Docker-v4.84-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 # PORTFOLIO ON-PREM SQL SERVER
-Example of an DWH setup limited to only on-prem Microsoft SQL Server using Transact-SQL
+Example of an DWH setup limited to only on-prem Microsoft SQL Server using Transact-SQL, SSIS, and VS(SSDT).
 
 ## 📝Notes and Limitations
 - MERGE statements purposefully avoided for known SQL bugs that still exist in SQL Server 2025 with merge operations. Instead applied seperate update and insert statements.
 
-
 ## 📚Layered Modelling
-- **'STG'** (Staging tables): raw, untransformed, source data, loaded via SSIS
-- **'INT'** (Intermediate views): conform staged data to business terminology, applies logic, compute hashes, only reads from STG
-- **'MRT'** (Mart Tables): business-ready Dimension ('DIM_') and Fact ('Fact_') tables, ready for consumption downstream by systems such as Power BI / Looker / DBT / etc.
+- **'STG'** (Staging tables aka Bronze): raw, untransformed, source data, loaded via SSIS
+- **'INT'** (Intermediate views aka Silver): conform staged data to business terminology, applies logic, compute hashes, only reads from STG
+- **'MRT'** (Mart Tables aka Gold): business-ready Dimension ('DIM_') and Fact ('Fact_') tables, ready for consumption downstream by systems such as Power BI / Looker / DBT / etc.
 
 ## 📘Dimensions
 Modelled using the appropriate level of tracking required, e.g. **type1, type2, and mixed/hybrid**, based on the judged meaningfullness at the time of writing.
@@ -33,14 +32,22 @@ Wrapped in try/catch with transaction rollback. Divided into multiple stages whe
 - Insert new/updated record versions
 - Update pre-existing records
 - Use of merge avoided due to known issues in SQL Server 2025
-- Above multi-stage methodology used to simplify debugging
+- Above multi-stage UPSERT methodology used to simplify debugging and readability
+
+## 🔃Patterns
+Appropriate patterns applied according to need  per table, including:
+- Truncate & Replace
+- UPSERT (non-tracked)
+- UPSERT (tracked)
+- Watermark-based APPEND
 
 ## #️⃣Indexing
 - Dimensions contain nonclustered indexes to support time-based and time-agnostic joins
 - Fact tables contain nonclustered indexes on surrogate keys to support downstream joins by engineers/analysts
 - Fact tables contain nonclustered columnstore indexes not strictly required for small tables, but to show knowledge
 
-
+##▶️Deployment
+Managed via Power shell script. Applies server division of interests (server for dB, server for SSIS). **All scripts included in deployment written for idempotency.**. Deployment script creates database, schemas, tables, stored procedures, SSIS artifacts, agents, and rbac. 
 
 # Pipeline
 ```mermaid
