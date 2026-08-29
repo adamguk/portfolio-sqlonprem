@@ -8,32 +8,62 @@ $Credential = Get-Credential -UserName "sa" -Message "Enter dbserver Password"
 $Username = $Credential.UserName
 $Password = $Credential.GetNetworkCredential().Password
 
-$Server = "192.168.50.185"
+# --- DWH server (NAS / Docker) ---
+$DwhServer = "192.168.50.185"
 $Port = "1433"
 $Database = "DWH_ONPREM"
-$ServerInstance = "$Server,$Port"
+$DwhServerInstance = "$DwhServer,$Port"
+
+# --- SSIS server (local Windows instance hosting the Catalog) ---
+$SSISServerInstance = "DESKTOP-8Q39CF7,56231"
+$IspacSourcePath = ".\SSIS\SSIS_DWHONPREM\bin\Development\SSIS_DWHONPREM.ispac"
+$IspacLocalPath = "C:\Temp\SSIS_DWHONPREM.ispac"
 
 $DeploymentSteps = @(
-    @{ Name = "Database & Schemas"; Path = ".\scripts\01_init_db.sql"; UseTargetDB = $false },
-    @{ Name = "RBAC"; Path = ".\scripts\01a_rbac.sql"; UseTargetDB = $true },
-    @{ Name = "Staging Tables"; Path = ".\scripts\02_create_tables_staging.sql"; UseTargetDB = $true },
-    @{ Name = "Operations Tables"; Path = ".\scripts\03_create_tables_etl.sql"; UseTargetDB = $true },
-    @{ Name = "Intermediate Views"; Path = ".\scripts\04_create_views_intermediate.sql"; UseTargetDB = $true },
-    @{ Name = "Mart Tables"; Path = ".\scripts\05_create_tables_mart.sql"; UseTargetDB = $true },
-    @{ Name = "Procedures"; Path = ".\scripts\06_create_procedures.sql"; UseTargetDB = $true },
-    @{ Name = "AgentJobs"; Path = ".\scripts\07_create_agent_jobs.sql"; UseTargetDB = $false }
+    @{ Name = "Database & Schemas"; Path = ".\scripts\01_init_db.sql"; UseTargetDB = $false; TargetServer = "DWH" },
+    @{ Name = "RBAC"; Path = ".\scripts\01a_rbac.sql"; UseTargetDB = $true; TargetServer = "DWH" },
+    @{ Name = "Staging Tables"; Path = ".\scripts\02_create_tables_staging.sql"; UseTargetDB = $true; TargetServer = "DWH" },
+    @{ Name = "Operations Tables"; Path = ".\scripts\03_create_tables_etl.sql"; UseTargetDB = $true; TargetServer = "DWH" },
+    @{ Name = "Intermediate Views"; Path = ".\scripts\04_create_views_intermediate.sql"; UseTargetDB = $true; TargetServer = "DWH" },
+    @{ Name = "Mart Tables"; Path = ".\scripts\05_create_tables_mart.sql"; UseTargetDB = $true; TargetServer = "DWH" },
+    @{ Name = "Procedures"; Path = ".\scripts\06_create_procedures.sql"; UseTargetDB = $true; TargetServer = "DWH" },
+    @{ Name = "AgentJobs"; Path = ".\scripts\07_create_agent_jobs.sql"; UseTargetDB = $false; TargetServer = "DWH" },
+    @{ Name = "SSIS Catalog Deployment"; Path = ".\scripts\08_deploy_ssis_catalog.sql"; UseTargetDB = $false; TargetServer = "SSIS" }
 )
+
+$DeploymentFailed = $false
 
 foreach ($Step in $DeploymentSteps) {
     Write-Host ""
     Write-Host "Deploying: $($Step.Name)..." 
-    
+
+    if ($Step.TargetServer -eq "SSIS") {
+        try {
+            Write-Host "Staging .ispac to local path: $IspacLocalPath"
+            New-Item -ItemType Directory -Path (Split-Path $IspacLocalPath) -Force | Out-Null
+            Copy-Item -Path $IspacSourcePath -Destination $IspacLocalPath -Force
+        }
+        catch {
+            Write-Host ""
+            Write-Host "[FATAL ERROR] Failed to stage .ispac before step: $($Step.Name)"
+            Write-Host $_.Exception.Message -ForegroundColor Red
+            $DeploymentFailed = $true
+            break
+        }
+    }
+
+    $TargetInstance = if ($Step.TargetServer -eq "SSIS") { $SSISServerInstance } else { $DwhServerInstance }
+
     try {
-        if ($Step.UseTargetDB) {
-            sqlcmd -S $ServerInstance -U $Username -P $Password -d $Database -i $Step.Path -b
+        if ($Step.TargetServer -eq "SSIS") {
+
+            sqlcmd -S $TargetInstance -E -i $Step.Path -b
+        }
+        elseif ($Step.UseTargetDB) {
+            sqlcmd -S $TargetInstance -U $Username -P $Password -d $Database -i $Step.Path -b
         }
         else {
-            sqlcmd -S $ServerInstance -U $Username -P $Password -i $Step.Path -b
+            sqlcmd -S $TargetInstance -U $Username -P $Password -i $Step.Path -b
         }
 
         Write-Host "[SUCCESS] $($Step.Name) deployed successfully!" -ForegroundColor Green
@@ -42,73 +72,15 @@ foreach ($Step in $DeploymentSteps) {
         Write-Host ""
         Write-Host "[FATAL ERROR] Deployment aborted during step: $($Step.Name)"
         Write-Host $_.Exception.Message -ForegroundColor Red
+        $DeploymentFailed = $true
         break
     }
 }
 
-# ==========================================
-#   SSIS Catalog Deployment
-# ==========================================
-Write-Host ""
-Write-Host "==========================================" 
-Write-Host "     Deploying SSIS Catalog & Project     " 
-Write-Host "==========================================" 
-
-$SSISServer = "DESKTOP-8Q39CF7"
-$SSISFolderName = "DWH_OnPrem"
-$SSISProjectName = "SSIS_DWHONPREM"
-$IspacPath = ".\SSIS\SSIS_DWHONPREM\bin\Development\SSIS_DWHONPREM.ispac"
-
-try {
-    Add-Type -AssemblyName "Microsoft.SqlServer.Management.IntegrationServices"
-
-    $SSISConnectionString = "Data Source=$SSISServer;Initial Catalog=master;Integrated Security=SSPI;"
-    $SqlConnection = New-Object System.Data.SqlClient.SqlConnection $SSISConnectionString
-    $IntegrationServices = New-Object Microsoft.SqlServer.Management.IntegrationServices.IntegrationServices $SqlConnection
-
-    $Catalog = $IntegrationServices.Catalogs["SSISDB"]
-
-    if (-not $Catalog) {
-        Write-Host "SSISDB Catalog not found - creating it now..."
-        $MasterKeySecure = Read-Host -Prompt "Enter a new SSIS Catalog Master Key password" -AsSecureString
-        $MasterKeyPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
-            [Runtime.InteropServices.Marshal]::SecureStringToBSTR($MasterKeySecure)
-        )
-
-        $Catalog = New-Object Microsoft.SqlServer.Management.IntegrationServices.Catalog(
-            $IntegrationServices, "SSISDB", $MasterKeyPlain
-        )
-        $Catalog.Create()
-        Write-Host "[SUCCESS] SSISDB Catalog created."
-    }
-    else {
-        Write-Host "SSISDB Catalog already exists - skipping creation."
-    }
-
-    $Folder = $Catalog.Folders[$SSISFolderName]
-
-    if (-not $Folder) {
-        Write-Host "Folder '$SSISFolderName' not found - creating it now..."
-        $Folder = New-Object Microsoft.SqlServer.Management.IntegrationServices.CatalogFolder(
-            $Catalog, $SSISFolderName, ""
-        )
-        $Folder.Create()
-        Write-Host "[SUCCESS] Folder '$SSISFolderName' created."
-    }
-    else {
-        Write-Host "Folder '$SSISFolderName' already exists - skipping creation."
-    }
-
-    Write-Host "Deploying project '$SSISProjectName'..."
-    [byte[]] $IspacBytes = [System.IO.File]::ReadAllBytes((Resolve-Path $IspacPath))
-    $Folder.DeployProject($SSISProjectName, $IspacBytes)
-
-    Write-Host "[SUCCESS] SSIS project deployed to $SSISFolderName/$SSISProjectName!" -ForegroundColor Green
-}
-catch {
+if ($DeploymentFailed) {
     Write-Host ""
-    Write-Host "[FATAL ERROR] SSIS Catalog deployment failed"
-    Write-Host $_.Exception.Message -ForegroundColor Red
+    Write-Host "[ABORTED] Deployment did not complete successfully." -ForegroundColor Red
+    exit 1
 }
 
 Write-Host ""
