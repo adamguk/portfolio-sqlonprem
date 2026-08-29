@@ -1,3 +1,14 @@
 .env
 env/*
 guidance_storedproc_scd_dim_tables.sql
+
+# Visual Studio / SSIS build & session artifacts
+**/bin/
+**/obj/
+.vs/
+*.suo
+*.user
+UpgradeLog.htm
+
+# Exception: keep the ispac for portfolio visibility
+!SSIS/SSIS_DWHONPREM/bin/Development/SSIS_DWHONPREM.ispac

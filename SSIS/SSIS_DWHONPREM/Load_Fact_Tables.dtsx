@@ -1,0 +1,2587 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="8/26/2026 3:56:37 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-8Q39CF7"
+  DTS:CreatorName="DESKTOP-8Q39CF7\adamg"
+  DTS:DTSID="{82D96284-9A0E-44CD-BB86-3F9711B4C854}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="2057"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="10"
+  DTS:VersionGUID="{04C1DB20-BF67-43F1-A8BF-3211E6E0BDA7}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[AdventureWorks]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{FB749529-48C3-4167-B41E-2E38B243C7EC}"
+      DTS:ObjectName="AdventureWorks">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=192.168.50.185,1434;User ID=sa;Initial Catalog=AdventureWorks2022;Provider=MSOLEDBSQL.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-Package-{FB749529-48C3-4167-B41E-2E38B243C7EC}192.168.50.185,1434.sa;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAjsRJWi1dk6PvqsC5RbLxgAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAABxWx4HgG3cytc/Eibxky/5m/qjT0EXGXE2RROBCrYBAQAAAAAOgAAAAAIAACAAAADOrgmu9LXBKUSjbsB5Yz/fqmZn9bPcv1xIx8qpJMDuqjAAAAAlm3P0rDhYYMjK3qbDauNAY92asdUhXPaVRaYpjL//7pd/jLM37Z1c+yjD2KnTpbpAAAAANT6wW0vcJt7NFn4LoQ3s1RIWPNGEJ8XWQHXNJgwnjZup+8SZ8i3VY5w0wkHg2ydE3F4RElwn2Q9DVR7vVh9bwA</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Destination_DWHONPREM]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+      DTS:ObjectName="Destination_DWHONPREM">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=192.168.50.185,1433;User ID=sa;Initial Catalog=DWH_ONPREM;Provider=MSOLEDBSQL.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-Package-{975C379D-33C2-4639-9B56-44E08CFA36CC}192.168.50.185,1433.DWH_ONPREM.sa;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAjsRJWi1dk6PvqsC5RbLxgAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAB2BErKNrxeEniCYhdChGuf9u35XyCwZ6FbeMyQU91yMQAAAAAOgAAAAAIAACAAAACJlv4vbcJMmBwouxWR5HMicGK/rcq4x35v9ABkT9HeDDAAAAB8k2lpgXrYszcul11kmNjKLTX2ISoGjiiB/Hyjs+aAnXSIf68xnI7Y9jnjWLo7pttAAAAAGpjwRiS/MvAg2Lp0pCCSS7IJD8uX/smv+4oyJVcHe1XwWmDfAGUQQRO3LGj2/A6UDTzz/K9lu/iQyG4t8efjvQ</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8F1CB142-54B0-447E-B34A-C0A173D2ED40}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCount">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{29647937-46A3-453F-8CA9-A0E5806C2B76}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="WatermarkDate">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{86bf6800-7cef-4273-8a5a-c37d0d97610d}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Sequence Container_Load_Fact_SalesOrderDetail">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{1eb1c8cf-a2ba-40cc-a312-f0c6cedc427f}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="AWorks Extract"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="AdventureWorks"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[Sales].[Customer]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT [SalesOrderID]
+      ,[SalesOrderDetailID]
+      ,[CarrierTrackingNumber]
+      ,[OrderQty]
+      ,[ProductID]
+      ,[SpecialOfferID]
+      ,[UnitPrice]
+      ,[UnitPriceDiscount]
+      ,[LineTotal]
+      ,[rowguid]
+      ,[ModifiedDate]
+  FROM [Sales].[SalesOrderDetail]
+  WHERE [ModifiedDate] &gt; ?</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">2</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping">"Watermark:Input",{29647937-46A3-453F-8CA9-A0E5806C2B76};</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[AdventureWorks]"
+                      connectionManagerRefId="Package.ConnectionManagers[AdventureWorks]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ModifiedDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]"
+                          name="ModifiedDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderID]"
+                          name="SalesOrderID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[rowguid]"
+                          dataType="guid"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[rowguid]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[rowguid]"
+                          name="rowguid"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderDetailID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderDetailID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderDetailID]"
+                          name="SalesOrderDetailID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CarrierTrackingNumber]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CarrierTrackingNumber]"
+                          length="25"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CarrierTrackingNumber]"
+                          name="CarrierTrackingNumber"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OrderQty]"
+                          dataType="i2"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[OrderQty]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OrderQty]"
+                          name="OrderQty"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ProductID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ProductID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ProductID]"
+                          name="ProductID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SpecialOfferID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SpecialOfferID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SpecialOfferID]"
+                          name="SpecialOfferID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[UnitPrice]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[UnitPrice]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[UnitPrice]"
+                          name="UnitPrice"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[UnitPriceDiscount]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[UnitPriceDiscount]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[UnitPriceDiscount]"
+                          name="UnitPriceDiscount"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[LineTotal]"
+                          dataType="numeric"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[LineTotal]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[LineTotal]"
+                          name="LineTotal"
+                          precision="38"
+                          scale="6"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          name="ModifiedDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderID]"
+                          dataType="i4"
+                          name="SalesOrderID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[rowguid]"
+                          dataType="guid"
+                          name="rowguid" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderDetailID]"
+                          dataType="i4"
+                          name="SalesOrderDetailID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CarrierTrackingNumber]"
+                          dataType="wstr"
+                          length="25"
+                          name="CarrierTrackingNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[OrderQty]"
+                          dataType="i2"
+                          name="OrderQty" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ProductID]"
+                          dataType="i4"
+                          name="ProductID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SpecialOfferID]"
+                          dataType="i4"
+                          name="SpecialOfferID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[UnitPrice]"
+                          dataType="cy"
+                          name="UnitPrice" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[UnitPriceDiscount]"
+                          dataType="cy"
+                          name="UnitPriceDiscount" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[LineTotal]"
+                          dataType="numeric"
+                          name="LineTotal"
+                          precision="38"
+                          scale="6" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesOrderID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesOrderID]"
+                          name="SalesOrderID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesOrderDetailID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesOrderDetailID]"
+                          name="SalesOrderDetailID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CarrierTrackingNumber]"
+                          dataType="wstr"
+                          length="25"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CarrierTrackingNumber]"
+                          name="CarrierTrackingNumber" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[OrderQty]"
+                          dataType="i2"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[OrderQty]"
+                          name="OrderQty" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ProductID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ProductID]"
+                          name="ProductID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SpecialOfferID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SpecialOfferID]"
+                          name="SpecialOfferID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[UnitPrice]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[UnitPrice]"
+                          name="UnitPrice" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[UnitPriceDiscount]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[UnitPriceDiscount]"
+                          name="UnitPriceDiscount" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[LineTotal]"
+                          dataType="numeric"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[LineTotal]"
+                          name="LineTotal"
+                          precision="38"
+                          scale="6" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[rowguid]"
+                          dataType="guid"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[rowguid]"
+                          name="rowguid" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ModifiedDate]"
+                          name="ModifiedDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="DWH_STG"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[STG].[Sales_SalesOrderDetail]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Destination_DWHONPREM]"
+                      connectionManagerRefId="Package.ConnectionManagers[Destination_DWHONPREM]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[ModifiedDate]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="ModifiedDate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ModifiedDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[SalesOrderID]"
+                          cachedDataType="i4"
+                          cachedName="SalesOrderID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesOrderID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[SalesOrderDetailID]"
+                          cachedDataType="i4"
+                          cachedName="SalesOrderDetailID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesOrderDetailID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderDetailID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[CarrierTrackingNumber]"
+                          cachedDataType="wstr"
+                          cachedLength="25"
+                          cachedName="CarrierTrackingNumber"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CarrierTrackingNumber]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CarrierTrackingNumber]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[ProductID]"
+                          cachedDataType="i4"
+                          cachedName="ProductID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ProductID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ProductID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[OrderQty]"
+                          cachedDataType="i2"
+                          cachedName="OrderQty"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[OrderQty]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OrderQty]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[SpecialOfferID]"
+                          cachedDataType="i4"
+                          cachedName="SpecialOfferID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SpecialOfferID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SpecialOfferID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[UnitPrice]"
+                          cachedDataType="cy"
+                          cachedName="UnitPrice"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[UnitPrice]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[UnitPrice]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[UnitPriceDiscount]"
+                          cachedDataType="cy"
+                          cachedName="UnitPriceDiscount"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[UnitPriceDiscount]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[UnitPriceDiscount]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[LineTotal]"
+                          cachedDataType="numeric"
+                          cachedName="LineTotal"
+                          cachedPrecision="38"
+                          cachedScale="6"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[LineTotal]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[LineTotal]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ModifiedDate]"
+                          dataType="dbTimeStamp2"
+                          name="ModifiedDate"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ExtractDatetime]"
+                          dataType="dbTimeStamp2"
+                          name="ExtractDatetime"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[RowHash]"
+                          dataType="bytes"
+                          length="32"
+                          name="RowHash" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesOrderID]"
+                          dataType="i4"
+                          name="SalesOrderID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesOrderDetailID]"
+                          dataType="i4"
+                          name="SalesOrderDetailID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CarrierTrackingNumber]"
+                          dataType="wstr"
+                          length="25"
+                          name="CarrierTrackingNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[OrderQty]"
+                          dataType="i2"
+                          name="OrderQty" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ProductID]"
+                          dataType="i4"
+                          name="ProductID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SpecialOfferID]"
+                          dataType="i4"
+                          name="SpecialOfferID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[UnitPrice]"
+                          dataType="cy"
+                          name="UnitPrice" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[UnitPriceDiscount]"
+                          dataType="cy"
+                          name="UnitPriceDiscount" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[LineTotal]"
+                          dataType="numeric"
+                          name="LineTotal"
+                          precision="38"
+                          scale="6" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\Row Count"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCount</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\Row Count.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\Row Count.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\Row Count.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract.Paths[OLE DB Source Output]"
+                  endId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\Row Count.Inputs[Row Count Input 1]"
+                  name="OLE DB Source Output"
+                  startId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract.Paths[Row Count Output 1]"
+                  endId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\Row Count.Outputs[Row Count Output 1]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\GET Updated Watermark"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{82fb1dc8-86a5-453c-8df2-94838e00ee99}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="GET Updated Watermark"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="SELECT COALESCE(MAX(ModifiedDate),'1900-01-01') FROM STG.Sales_SalesOrderDetail;"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::WatermarkDate" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\GET Watermark"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{5a9b05a1-9f00-4504-8eb2-b4044a44967d}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="GET Watermark"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="SELECT COALESCE( MAX(MaxModifiedDateSeen),'1900-01-01') FROM ETL.LoadAudit WHERE TableName = 'STG.Sales_SalesOrderDetail' AND Status = 'Success';"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::WatermarkDate" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\Log Failure"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{aec79039-d771-44f2-84f2-e09235aa53c5}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Log Failure"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="EXEC ETL.USP_LOAD_AUDIT 'STG.Sales_SalesOrderHeader','Watermark Append',?,'Failure',?,?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::RowCount"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::WatermarkDate"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="7"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::ServerExecutionID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="20"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail\Log Success"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{8852a24f-233b-49cc-aa30-75309e8048e4}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Log Success"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="EXEC ETL.USP_LOAD_AUDIT 'STG.Sales_SalesOrderDetail','Watermark Append',?,'Success',?,?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::RowCount"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::WatermarkDate"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="7"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::ServerExecutionID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="20"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{f764d260-02fd-4db5-b20c-bba68e25d96e}"
+          DTS:From="Package\Sequence Container_Load_Fact_SalesOrderDetail\GET Watermark"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{166E3596-7228-4945-99E9-FC4B31BD00F8}"
+          DTS:From="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Sequence Container_Load_Fact_SalesOrderDetail\Log Failure"
+          DTS:Value="1" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{a45e5b35-fadc-4aca-b2af-0d445cad11d9}"
+          DTS:From="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Sequence Container_Load_Fact_SalesOrderDetail\GET Updated Watermark" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderDetail.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{b62892a7-da64-48e3-ac45-e48195b2f6f0}"
+          DTS:From="Package\Sequence Container_Load_Fact_SalesOrderDetail\GET Updated Watermark"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\Sequence Container_Load_Fact_SalesOrderDetail\Log Success" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{792f3696-bc88-46b8-baea-73e7c7b409bc}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Sequence Container_Load_Fact_SalesOrderHeader">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{2480ace5-1f48-4217-8239-998adbc52d58}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="AWorks Extract"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="AdventureWorks"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[Sales].[Customer]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT [SalesOrderID]
+      ,[RevisionNumber]
+      ,[OrderDate]
+      ,[DueDate]
+      ,[ShipDate]
+      ,[Status]
+      ,[OnlineOrderFlag]
+      ,[SalesOrderNumber]
+      ,[PurchaseOrderNumber]
+      ,[AccountNumber]
+      ,[CustomerID]
+      ,[SalesPersonID]
+      ,[TerritoryID]
+      ,[BillToAddressID]
+      ,[ShipToAddressID]
+      ,[ShipMethodID]
+      ,[CreditCardID]
+      ,[CreditCardApprovalCode]
+      ,[CurrencyRateID]
+      ,[SubTotal]
+      ,[TaxAmt]
+      ,[Freight]
+      ,[TotalDue]
+      ,[Comment]
+      ,[rowguid]
+      ,[ModifiedDate]
+  FROM [Sales].[SalesOrderHeader]
+  WHERE [ModifiedDate] &gt; ?</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">2</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping">"Watermark:Input",{29647937-46A3-453F-8CA9-A0E5806C2B76};</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[AdventureWorks]"
+                      connectionManagerRefId="Package.ConnectionManagers[AdventureWorks]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ModifiedDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]"
+                          name="ModifiedDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CurrencyRateID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateID]"
+                          name="CurrencyRateID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderID]"
+                          name="SalesOrderID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[RevisionNumber]"
+                          dataType="ui1"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[RevisionNumber]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[RevisionNumber]"
+                          name="RevisionNumber"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OrderDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[OrderDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OrderDate]"
+                          name="OrderDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[DueDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[DueDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[DueDate]"
+                          name="DueDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ShipDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipDate]"
+                          name="ShipDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Status]"
+                          dataType="ui1"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[Status]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Status]"
+                          name="Status"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OnlineOrderFlag]"
+                          dataType="bool"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[OnlineOrderFlag]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OnlineOrderFlag]"
+                          name="OnlineOrderFlag"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderNumber]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderNumber]"
+                          length="25"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderNumber]"
+                          name="SalesOrderNumber"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[PurchaseOrderNumber]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[PurchaseOrderNumber]"
+                          length="25"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[PurchaseOrderNumber]"
+                          name="PurchaseOrderNumber"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[AccountNumber]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[AccountNumber]"
+                          length="15"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[AccountNumber]"
+                          name="AccountNumber"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CustomerID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CustomerID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CustomerID]"
+                          name="CustomerID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesPersonID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesPersonID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesPersonID]"
+                          name="SalesPersonID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TerritoryID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[TerritoryID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TerritoryID]"
+                          name="TerritoryID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[BillToAddressID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[BillToAddressID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[BillToAddressID]"
+                          name="BillToAddressID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipToAddressID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ShipToAddressID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipToAddressID]"
+                          name="ShipToAddressID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipMethodID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ShipMethodID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipMethodID]"
+                          name="ShipMethodID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CreditCardID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CreditCardID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CreditCardID]"
+                          name="CreditCardID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CreditCardApprovalCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CreditCardApprovalCode]"
+                          length="15"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CreditCardApprovalCode]"
+                          name="CreditCardApprovalCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SubTotal]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SubTotal]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SubTotal]"
+                          name="SubTotal"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TaxAmt]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[TaxAmt]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TaxAmt]"
+                          name="TaxAmt"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Freight]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[Freight]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Freight]"
+                          name="Freight"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TotalDue]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[TotalDue]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TotalDue]"
+                          name="TotalDue"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Comment]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[Comment]"
+                          length="128"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Comment]"
+                          name="Comment"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[rowguid]"
+                          dataType="guid"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[rowguid]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[rowguid]"
+                          name="rowguid"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          name="ModifiedDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CurrencyRateID]"
+                          dataType="i4"
+                          name="CurrencyRateID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderID]"
+                          dataType="i4"
+                          name="SalesOrderID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[RevisionNumber]"
+                          dataType="ui1"
+                          name="RevisionNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[OrderDate]"
+                          dataType="dbTimeStamp"
+                          name="OrderDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[DueDate]"
+                          dataType="dbTimeStamp"
+                          name="DueDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ShipDate]"
+                          dataType="dbTimeStamp"
+                          name="ShipDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[Status]"
+                          dataType="ui1"
+                          name="Status" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[OnlineOrderFlag]"
+                          dataType="bool"
+                          name="OnlineOrderFlag" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesOrderNumber]"
+                          dataType="wstr"
+                          length="25"
+                          name="SalesOrderNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[PurchaseOrderNumber]"
+                          dataType="wstr"
+                          length="25"
+                          name="PurchaseOrderNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[AccountNumber]"
+                          dataType="wstr"
+                          length="15"
+                          name="AccountNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CustomerID]"
+                          dataType="i4"
+                          name="CustomerID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SalesPersonID]"
+                          dataType="i4"
+                          name="SalesPersonID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[TerritoryID]"
+                          dataType="i4"
+                          name="TerritoryID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[BillToAddressID]"
+                          dataType="i4"
+                          name="BillToAddressID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ShipToAddressID]"
+                          dataType="i4"
+                          name="ShipToAddressID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ShipMethodID]"
+                          dataType="i4"
+                          name="ShipMethodID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CreditCardID]"
+                          dataType="i4"
+                          name="CreditCardID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CreditCardApprovalCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="15"
+                          name="CreditCardApprovalCode" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[SubTotal]"
+                          dataType="cy"
+                          name="SubTotal" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[TaxAmt]"
+                          dataType="cy"
+                          name="TaxAmt" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[Freight]"
+                          dataType="cy"
+                          name="Freight" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[TotalDue]"
+                          dataType="cy"
+                          name="TotalDue" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[Comment]"
+                          dataType="wstr"
+                          length="128"
+                          name="Comment" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[rowguid]"
+                          dataType="guid"
+                          name="rowguid" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesOrderID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesOrderID]"
+                          name="SalesOrderID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[RevisionNumber]"
+                          dataType="ui1"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[RevisionNumber]"
+                          name="RevisionNumber" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[OrderDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[OrderDate]"
+                          name="OrderDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[DueDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[DueDate]"
+                          name="DueDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ShipDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ShipDate]"
+                          name="ShipDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[Status]"
+                          dataType="ui1"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[Status]"
+                          name="Status" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[OnlineOrderFlag]"
+                          dataType="bool"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[OnlineOrderFlag]"
+                          name="OnlineOrderFlag" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesOrderNumber]"
+                          dataType="wstr"
+                          length="25"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesOrderNumber]"
+                          name="SalesOrderNumber" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[PurchaseOrderNumber]"
+                          dataType="wstr"
+                          length="25"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[PurchaseOrderNumber]"
+                          name="PurchaseOrderNumber" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[AccountNumber]"
+                          dataType="wstr"
+                          length="15"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[AccountNumber]"
+                          name="AccountNumber" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CustomerID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CustomerID]"
+                          name="CustomerID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesPersonID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SalesPersonID]"
+                          name="SalesPersonID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[TerritoryID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[TerritoryID]"
+                          name="TerritoryID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[BillToAddressID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[BillToAddressID]"
+                          name="BillToAddressID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ShipToAddressID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ShipToAddressID]"
+                          name="ShipToAddressID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ShipMethodID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ShipMethodID]"
+                          name="ShipMethodID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CreditCardID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CreditCardID]"
+                          name="CreditCardID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CreditCardApprovalCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="15"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CreditCardApprovalCode]"
+                          name="CreditCardApprovalCode" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CurrencyRateID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CurrencyRateID]"
+                          name="CurrencyRateID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SubTotal]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[SubTotal]"
+                          name="SubTotal" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[TaxAmt]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[TaxAmt]"
+                          name="TaxAmt" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[Freight]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[Freight]"
+                          name="Freight" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[TotalDue]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[TotalDue]"
+                          name="TotalDue" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[Comment]"
+                          dataType="wstr"
+                          length="128"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[Comment]"
+                          name="Comment" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[rowguid]"
+                          dataType="guid"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[rowguid]"
+                          name="rowguid" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ModifiedDate]"
+                          name="ModifiedDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="DWH_STG"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[STG].[Sales_SalesOrderHeader]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Destination_DWHONPREM]"
+                      connectionManagerRefId="Package.ConnectionManagers[Destination_DWHONPREM]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[ModifiedDate]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="ModifiedDate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ModifiedDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[CurrencyRateID]"
+                          cachedDataType="i4"
+                          cachedName="CurrencyRateID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyRateID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[SalesOrderID]"
+                          cachedDataType="i4"
+                          cachedName="SalesOrderID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesOrderID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[RevisionNumber]"
+                          cachedDataType="ui1"
+                          cachedName="RevisionNumber"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[RevisionNumber]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[RevisionNumber]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[OrderDate]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="OrderDate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[OrderDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OrderDate]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[DueDate]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="DueDate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[DueDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[DueDate]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[ShipDate]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="ShipDate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ShipDate]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipDate]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[Status]"
+                          cachedDataType="ui1"
+                          cachedName="Status"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[Status]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Status]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[OnlineOrderFlag]"
+                          cachedDataType="bool"
+                          cachedName="OnlineOrderFlag"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[OnlineOrderFlag]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[OnlineOrderFlag]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[SalesOrderNumber]"
+                          cachedDataType="wstr"
+                          cachedLength="25"
+                          cachedName="SalesOrderNumber"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesOrderNumber]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesOrderNumber]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[PurchaseOrderNumber]"
+                          cachedDataType="wstr"
+                          cachedLength="25"
+                          cachedName="PurchaseOrderNumber"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[PurchaseOrderNumber]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[PurchaseOrderNumber]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[AccountNumber]"
+                          cachedDataType="wstr"
+                          cachedLength="15"
+                          cachedName="AccountNumber"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[AccountNumber]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[AccountNumber]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[CustomerID]"
+                          cachedDataType="i4"
+                          cachedName="CustomerID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CustomerID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CustomerID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[SalesPersonID]"
+                          cachedDataType="i4"
+                          cachedName="SalesPersonID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesPersonID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SalesPersonID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[TerritoryID]"
+                          cachedDataType="i4"
+                          cachedName="TerritoryID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[TerritoryID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TerritoryID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[BillToAddressID]"
+                          cachedDataType="i4"
+                          cachedName="BillToAddressID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[BillToAddressID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[BillToAddressID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[ShipToAddressID]"
+                          cachedDataType="i4"
+                          cachedName="ShipToAddressID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ShipToAddressID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipToAddressID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[ShipMethodID]"
+                          cachedDataType="i4"
+                          cachedName="ShipMethodID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ShipMethodID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ShipMethodID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[CreditCardID]"
+                          cachedDataType="i4"
+                          cachedName="CreditCardID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CreditCardID]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CreditCardID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[CreditCardApprovalCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="15"
+                          cachedName="CreditCardApprovalCode"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CreditCardApprovalCode]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CreditCardApprovalCode]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[SubTotal]"
+                          cachedDataType="cy"
+                          cachedName="SubTotal"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SubTotal]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[SubTotal]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[TaxAmt]"
+                          cachedDataType="cy"
+                          cachedName="TaxAmt"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[TaxAmt]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TaxAmt]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[Freight]"
+                          cachedDataType="cy"
+                          cachedName="Freight"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[Freight]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Freight]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[TotalDue]"
+                          cachedDataType="cy"
+                          cachedName="TotalDue"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[TotalDue]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[TotalDue]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[Comment]"
+                          cachedDataType="wstr"
+                          cachedLength="128"
+                          cachedName="Comment"
+                          externalMetadataColumnId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[Comment]"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[Comment]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ModifiedDate]"
+                          dataType="dbTimeStamp2"
+                          name="ModifiedDate"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ExtractDatetime]"
+                          dataType="dbTimeStamp2"
+                          name="ExtractDatetime"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[RowHash]"
+                          dataType="bytes"
+                          length="32"
+                          name="RowHash" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyRateID]"
+                          dataType="i4"
+                          name="CurrencyRateID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesOrderID]"
+                          dataType="i4"
+                          name="SalesOrderID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[RevisionNumber]"
+                          dataType="ui1"
+                          name="RevisionNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[OrderDate]"
+                          dataType="dbTimeStamp2"
+                          name="OrderDate"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[DueDate]"
+                          dataType="dbTimeStamp2"
+                          name="DueDate"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ShipDate]"
+                          dataType="dbTimeStamp2"
+                          name="ShipDate"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[Status]"
+                          dataType="ui1"
+                          name="Status" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[OnlineOrderFlag]"
+                          dataType="bool"
+                          name="OnlineOrderFlag" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesOrderNumber]"
+                          dataType="wstr"
+                          length="25"
+                          name="SalesOrderNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[PurchaseOrderNumber]"
+                          dataType="wstr"
+                          length="25"
+                          name="PurchaseOrderNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[AccountNumber]"
+                          dataType="wstr"
+                          length="15"
+                          name="AccountNumber" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CustomerID]"
+                          dataType="i4"
+                          name="CustomerID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SalesPersonID]"
+                          dataType="i4"
+                          name="SalesPersonID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[TerritoryID]"
+                          dataType="i4"
+                          name="TerritoryID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[BillToAddressID]"
+                          dataType="i4"
+                          name="BillToAddressID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ShipToAddressID]"
+                          dataType="i4"
+                          name="ShipToAddressID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ShipMethodID]"
+                          dataType="i4"
+                          name="ShipMethodID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CreditCardID]"
+                          dataType="i4"
+                          name="CreditCardID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CreditCardApprovalCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="15"
+                          name="CreditCardApprovalCode" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[SubTotal]"
+                          dataType="cy"
+                          name="SubTotal" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[TaxAmt]"
+                          dataType="cy"
+                          name="TaxAmt" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[Freight]"
+                          dataType="cy"
+                          name="Freight" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[TotalDue]"
+                          dataType="cy"
+                          name="TotalDue" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[Comment]"
+                          dataType="wstr"
+                          length="128"
+                          name="Comment" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\Row Count"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCount</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\Row Count.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\Row Count.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\Row Count.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract.Paths[OLE DB Source Output]"
+                  endId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\Row Count.Inputs[Row Count Input 1]"
+                  name="OLE DB Source Output"
+                  startId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract.Paths[Row Count Output 1]"
+                  endId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\Row Count.Outputs[Row Count Output 1]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\GET Updated Watermark"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{d872b107-7f74-4363-bfdc-678a42fffe6d}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="GET Updated Watermark"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="SELECT COALESCE(MAX(ModifiedDate),'1900-01-01') FROM STG.Sales_SalesOrderHeader;"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::WatermarkDate" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\GET Watermark"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{4a9679b3-c67a-4466-9b28-b4a6b575b579}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="GET Watermark"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="SELECT COALESCE( MAX(MaxModifiedDateSeen),'1900-01-01') FROM ETL.LoadAudit WHERE TableName = 'STG.Sales_SalesOrderHeader' AND Status = 'Success';"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::WatermarkDate" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\Log Failure"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{03a0c685-a1f3-44bd-91a6-5ce89fbe56a3}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Log Failure"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="EXEC ETL.USP_LOAD_AUDIT 'STG.Sales_SalesOrderHeader','Watermark Append',?,'Failure',?,?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::RowCount"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::WatermarkDate"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="7"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::ServerExecutionID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="20"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader\Log Success"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{2c651c22-5f8a-4d0f-8549-81b5b18abdd3}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Log Success"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="EXEC ETL.USP_LOAD_AUDIT 'STG.Sales_SalesOrderHeader','Watermark Append',?,'Success',?,?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::RowCount"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::WatermarkDate"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="7"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::ServerExecutionID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="20"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{ad348e1e-9146-4ca1-82a0-476699c60f42}"
+          DTS:From="Package\Sequence Container_Load_Fact_SalesOrderHeader\GET Watermark"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{86F2B5F9-23F1-4635-9128-8C67AE0A38A0}"
+          DTS:From="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Sequence Container_Load_Fact_SalesOrderHeader\Log Failure"
+          DTS:Value="1" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{a2a61a7e-4187-49fd-b2a1-cf6c04a5572e}"
+          DTS:From="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Sequence Container_Load_Fact_SalesOrderHeader\GET Updated Watermark" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_Fact_SalesOrderHeader.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{528d12d5-3ea6-487e-8f31-1919feb0df39}"
+          DTS:From="Package\Sequence Container_Load_Fact_SalesOrderHeader\GET Updated Watermark"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\Sequence Container_Load_Fact_SalesOrderHeader\Log Success" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{DCA00116-699C-4F1E-8ADA-D1E308E60ED4}"
+      DTS:From="Package\Sequence Container_Load_Fact_SalesOrderHeader"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Sequence Container_Load_Fact_SalesOrderDetail" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="155,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract"
+          TopLeft="258.5,107.5" />
+        <NodeLayout
+          Size="158,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\GET Watermark"
+          TopLeft="257,5.5" />
+        <NodeLayout
+          Size="203,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\GET Updated Watermark"
+          TopLeft="5.50000000000003,209.5" />
+        <NodeLayout
+          Size="142,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\Log Success"
+          TopLeft="36.0000000000001,311.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader.PrecedenceConstraints[Constraint]"
+          TopLeft="336,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader.PrecedenceConstraints[Constraint 2]"
+          TopLeft="311.5,149.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-204.5,60"
+              Start="0,0"
+              End="-204.5,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.367816091954" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,20.367816091954"
+                    Point2="0,24.367816091954"
+                    Point3="-4,24.367816091954" />
+                  <mssgle:LineSegment
+                    End="-200.5,24.367816091954" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-200.5,24.367816091954"
+                    Point2="-204.5,24.367816091954"
+                    Point3="-204.5,28.367816091954" />
+                  <mssgle:LineSegment
+                    End="-204.5,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader.PrecedenceConstraints[Constraint 3]"
+          TopLeft="107,251.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="134,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\Log Failure"
+          TopLeft="269,209.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader.PrecedenceConstraints[Constraint 1]"
+          TopLeft="360.5,149.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-24.4999999999999,60"
+              Start="0,0"
+              End="-24.4999999999999,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.367816091954" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,20.367816091954"
+                    Point2="0,24.367816091954"
+                    Point3="-4,24.367816091954" />
+                  <mssgle:LineSegment
+                    End="-20.4999999999999,24.367816091954" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-20.4999999999999,24.367816091954"
+                    Point2="-24.4999999999999,24.367816091954"
+                    Point3="-24.4999999999999,28.367816091954" />
+                  <mssgle:LineSegment
+                    End="-24.4999999999999,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-27.49134765625,29.367816091954,30.4826953125,9.7490234375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="420,408"
+          Size="420,452"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader"
+          TopLeft="52,74" />
+        <NodeLayout
+          Size="155,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract"
+          TopLeft="46,107.5" />
+        <NodeLayout
+          Size="203,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\GET Updated Watermark"
+          TopLeft="14,209.5" />
+        <NodeLayout
+          Size="158,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\GET Watermark"
+          TopLeft="50.5,11.5" />
+        <NodeLayout
+          Size="142,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\Log Success"
+          TopLeft="52.5,311.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail.PrecedenceConstraints[Constraint]"
+          TopLeft="126.5,53.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,54"
+              Start="0,0"
+              End="0,46.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail.PrecedenceConstraints[Constraint 2]"
+          TopLeft="123.5,149.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-8,60"
+              Start="0,0"
+              End="-8,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="-4,30" />
+                  <mssgle:LineSegment
+                    End="-4,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-4,30"
+                    Point2="-8,30"
+                    Point3="-8,34" />
+                  <mssgle:LineSegment
+                    End="-8,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail.PrecedenceConstraints[Constraint 3]"
+          TopLeft="115.5,251.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="8,60"
+              Start="0,0"
+              End="8,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="4,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="4,30"
+                    Point2="8,30"
+                    Point3="8,34" />
+                  <mssgle:LineSegment
+                    End="8,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="134,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\Log Failure"
+          TopLeft="244,216" />
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail.PrecedenceConstraints[Constraint 1]"
+          TopLeft="148,149.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="163,66.5"
+              Start="0,0"
+              End="163,59">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.007662835249" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.007662835249"
+                    Point2="0,27.007662835249"
+                    Point3="4,27.007662835249" />
+                  <mssgle:LineSegment
+                    End="159,27.007662835249" />
+                  <mssgle:CubicBezierSegment
+                    Point1="159,27.007662835249"
+                    Point2="163,27.007662835249"
+                    Point3="163,31.007662835249" />
+                  <mssgle:LineSegment
+                    End="163,59" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="66.25865234375,32.007662835249,30.4826953125,9.7490234375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="383,409"
+          Size="383,452"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail"
+          TopLeft="564,69.5" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="472,297.75">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="92,0"
+              Start="0,0"
+              End="84.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="84.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="134,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG"
+          TopLeft="498,273" />
+        <NodeLayout
+          Size="160,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks"
+          TopLeft="221,84" />
+        <NodeLayout
+          Size="133,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\Row Count"
+          TopLeft="346,179" />
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract.Paths[Row Count Output 1]"
+          TopLeft="412.5,221">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="152.5,52"
+              Start="0,0"
+              End="152.5,44.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22"
+                    Point2="0,26"
+                    Point3="4,26" />
+                  <mssgle:LineSegment
+                    End="148.5,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="148.5,26"
+                    Point2="152.5,26"
+                    Point3="152.5,30" />
+                  <mssgle:LineSegment
+                    End="152.5,44.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract.Paths[OLE DB Source Output]"
+          TopLeft="301,126">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="111.5,53"
+              Start="0,0"
+              End="111.5,45.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.5"
+                    Point2="0,26.5"
+                    Point3="4,26.5" />
+                  <mssgle:LineSegment
+                    End="107.5,26.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="107.5,26.5"
+                    Point2="111.5,26.5"
+                    Point3="111.5,30.5" />
+                  <mssgle:LineSegment
+                    End="111.5,45.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\DWH_STG">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container_Load_Fact_SalesOrderHeader\AWorks Extract\AdventureWorks">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="134,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG"
+          TopLeft="498,273" />
+        <NodeLayout
+          Size="160,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks"
+          TopLeft="221,84" />
+        <NodeLayout
+          Size="133,42"
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\Row Count"
+          TopLeft="346,179" />
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract.Paths[Row Count Output 1]"
+          TopLeft="412.5,221">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="152.5,52"
+              Start="0,0"
+              End="152.5,44.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22"
+                    Point2="0,26"
+                    Point3="4,26" />
+                  <mssgle:LineSegment
+                    End="148.5,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="148.5,26"
+                    Point2="152.5,26"
+                    Point3="152.5,30" />
+                  <mssgle:LineSegment
+                    End="152.5,44.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract.Paths[OLE DB Source Output]"
+          TopLeft="301,126">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="111.5,53"
+              Start="0,0"
+              End="111.5,45.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.5"
+                    Point2="0,26.5"
+                    Point3="4,26.5" />
+                  <mssgle:LineSegment
+                    End="107.5,26.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="107.5,26.5"
+                    Point2="111.5,26.5"
+                    Point3="111.5,30.5" />
+                  <mssgle:LineSegment
+                    End="111.5,45.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\DWH_STG">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container_Load_Fact_SalesOrderDetail\AWorks Extract\AdventureWorks">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

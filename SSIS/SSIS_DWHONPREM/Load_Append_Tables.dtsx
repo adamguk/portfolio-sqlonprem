@@ -1,0 +1,934 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="8/25/2026 9:42:59 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-8Q39CF7"
+  DTS:CreatorName="DESKTOP-8Q39CF7\adamg"
+  DTS:DTSID="{0006116F-DC21-4C49-BE85-943E8E996D20}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="2057"
+  DTS:ObjectName="Load_Append_Tables"
+  DTS:PackageType="5"
+  DTS:VersionBuild="17"
+  DTS:VersionGUID="{E1A76C40-AD06-4E52-872A-6EBD84C97298}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[AdventureWorks]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{FB749529-48C3-4167-B41E-2E38B243C7EC}"
+      DTS:ObjectName="AdventureWorks">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=192.168.50.185,1434;User ID=sa;Initial Catalog=AdventureWorks2022;Provider=MSOLEDBSQL.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-Package-{FB749529-48C3-4167-B41E-2E38B243C7EC}192.168.50.185,1434.sa;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAjsRJWi1dk6PvqsC5RbLxgAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAAhaSFQX3d1buHs29meh5qLLDV2Et+kHYIeIS6EyQVd7AAAAAAOgAAAAAIAACAAAACFQPEUhTTbFyNhr0H7QulzMuxcLS3AdzbjmT7s1XQKKTAAAAB4orFv+jgvKWr0HnqBy2kdVyEhmc1nha3oJtBn/F9R6XQnLEM4NXt887KUaGazQipAAAAAD/ve33riTUxXxU79jCxNqKv8IQQtus5vMLg+XNld9eS4gfloSuMmmq17MQ8R1LckZQXrxiiOQtO5MuM7bWcoSw</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Destination_DWHONPREM]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+      DTS:ObjectName="Destination_DWHONPREM">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=192.168.50.185,1433;User ID=sa;Initial Catalog=DWH_ONPREM;Provider=MSOLEDBSQL.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-Package-{975C379D-33C2-4639-9B56-44E08CFA36CC}192.168.50.185,1433.DWH_ONPREM.sa;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAjsRJWi1dk6PvqsC5RbLxgAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACDeNKsXYJuLw/GCs5AmaBeJTaDtqfxrZvxDuQcaGFlMAAAAAAOgAAAAAIAACAAAAC/atHbOxyeSWS5pGNzEtFtrc238i4obxqpI3eYw7zrtjAAAAAHVVGwwQejderqF39buDUMqBWsmMo+ArPuU4A7LBLe29/t8GLgm6PWozvsTciulbZAAAAAfnOdYN6tRIOTYS4XHh4UlKVPp7h8JKCqg42wTvkXDaLWH7/nbyA++KjcJwucZNx2G+G1bNl/9dUngYgaCZKhXQ</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1214B614-45E8-4972-8E37-5D73FF90D492}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="LastRunDate">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1266021B-FCD9-4804-A47D-D899B7172ABC}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="MaxModifiedDateSeen">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C233090D-92E9-4DF8-A326-C9C9DB5210BD}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCount">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Sequence Container_Load_CurrencyRate"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{f2c8d427-5772-4956-8977-e6af171720a4}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Sequence Container_Load_CurrencyRate">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{6549a78a-3a68-4bd0-9028-0fe25ed98862}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="AWorks Extract"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="AdventureWorks"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[Sales].[Customer]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+    CurrencyRateID,
+    CurrencyRateDate,
+    FromCurrencyCode,
+    ToCurrencyCode,
+    AverageRate,
+    EndOfDayRate,
+    ModifiedDate
+FROM Sales.CurrencyRate
+WHERE ModifiedDate &gt; ?</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">2</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping">"Parameter0:Input",{1214B614-45E8-4972-8E37-5D73FF90D492};</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[AdventureWorks]"
+                      connectionManagerRefId="Package.ConnectionManagers[AdventureWorks]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ModifiedDate]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]"
+                          name="ModifiedDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CurrencyRateID]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateID]"
+                          name="CurrencyRateID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CurrencyRateDate]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateDate]"
+                          name="CurrencyRateDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[FromCurrencyCode]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[FromCurrencyCode]"
+                          length="3"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[FromCurrencyCode]"
+                          name="FromCurrencyCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ToCurrencyCode]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ToCurrencyCode]"
+                          length="3"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ToCurrencyCode]"
+                          name="ToCurrencyCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[AverageRate]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[AverageRate]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[AverageRate]"
+                          name="AverageRate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[EndOfDayRate]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[EndOfDayRate]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[EndOfDayRate]"
+                          name="EndOfDayRate"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          name="ModifiedDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CurrencyRateID]"
+                          dataType="i4"
+                          name="CurrencyRateID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[CurrencyRateDate]"
+                          dataType="dbTimeStamp"
+                          name="CurrencyRateDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[FromCurrencyCode]"
+                          dataType="wstr"
+                          length="3"
+                          name="FromCurrencyCode" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[ToCurrencyCode]"
+                          dataType="wstr"
+                          length="3"
+                          name="ToCurrencyCode" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[AverageRate]"
+                          dataType="cy"
+                          name="AverageRate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].ExternalColumns[EndOfDayRate]"
+                          dataType="cy"
+                          name="EndOfDayRate" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CurrencyRateID]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CurrencyRateID]"
+                          name="CurrencyRateID" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CurrencyRateDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[CurrencyRateDate]"
+                          name="CurrencyRateDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[FromCurrencyCode]"
+                          dataType="wstr"
+                          length="3"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[FromCurrencyCode]"
+                          name="FromCurrencyCode" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ToCurrencyCode]"
+                          dataType="wstr"
+                          length="3"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ToCurrencyCode]"
+                          name="ToCurrencyCode" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[AverageRate]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[AverageRate]"
+                          name="AverageRate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[EndOfDayRate]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[EndOfDayRate]"
+                          name="EndOfDayRate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ModifiedDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ModifiedDate]"
+                          name="ModifiedDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="DWH_STG"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[STG].[Sales_CurrencyRate]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Destination_DWHONPREM]"
+                      connectionManagerRefId="Package.ConnectionManagers[Destination_DWHONPREM]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[ModifiedDate]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="ModifiedDate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ModifiedDate]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ModifiedDate]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[CurrencyRateID]"
+                          cachedDataType="i4"
+                          cachedName="CurrencyRateID"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyRateID]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateID]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[CurrencyRateDate]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="CurrencyRateDate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyRateDate]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[CurrencyRateDate]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[FromCurrencyCode]"
+                          cachedDataType="wstr"
+                          cachedLength="3"
+                          cachedName="FromCurrencyCode"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[FromCurrencyCode]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[FromCurrencyCode]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[ToCurrencyCode]"
+                          cachedDataType="wstr"
+                          cachedLength="3"
+                          cachedName="ToCurrencyCode"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ToCurrencyCode]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[ToCurrencyCode]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[AverageRate]"
+                          cachedDataType="cy"
+                          cachedName="AverageRate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[AverageRate]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[AverageRate]" />
+                        <inputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].Columns[EndOfDayRate]"
+                          cachedDataType="cy"
+                          cachedName="EndOfDayRate"
+                          externalMetadataColumnId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[EndOfDayRate]"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output].Columns[EndOfDayRate]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ModifiedDate]"
+                          dataType="dbTimeStamp2"
+                          name="ModifiedDate"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ExtractDatetime]"
+                          dataType="dbTimeStamp2"
+                          name="ExtractDatetime"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[RowHash]"
+                          dataType="bytes"
+                          length="32"
+                          name="RowHash" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyRateID]"
+                          dataType="i4"
+                          name="CurrencyRateID" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyRateDate]"
+                          dataType="dbTimeStamp2"
+                          name="CurrencyRateDate"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[FromCurrencyCode]"
+                          dataType="wstr"
+                          length="3"
+                          name="FromCurrencyCode" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[ToCurrencyCode]"
+                          dataType="wstr"
+                          length="3"
+                          name="ToCurrencyCode" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[AverageRate]"
+                          dataType="cy"
+                          name="AverageRate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input].ExternalColumns[EndOfDayRate]"
+                          dataType="cy"
+                          name="EndOfDayRate" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\Row Count"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCount</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\Row Count.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\Row Count.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\Row Count.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract.Paths[OLE DB Source Output]"
+                  endId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\Row Count.Inputs[Row Count Input 1]"
+                  name="OLE DB Source Output"
+                  startId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks.Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract.Paths[Row Count Output 1]"
+                  endId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\Row Count.Outputs[Row Count Output 1]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_CurrencyRate\GET LastRunDate"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{43e967fc-490e-4cb1-836b-236f90c28142}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="GET LastRunDate"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="SELECT COALESCE( MAX(MaxModifiedDateSeen),'1900-01-01') FROM ETL.LoadAudit WHERE TableName = 'STG.Sales_CurrencyRate' AND Status = 'Success';"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::LastRunDate" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_CurrencyRate\GET MaxModifiedDate"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{2F82F489-05CE-4274-B37F-F5883E113170}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="GET MaxModifiedDate"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="SELECT COALESCE(MAX(ModifiedDate),'1900-01-01') FROM STG.Sales_CurrencyRate;"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::MaxModifiedDateSeen" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container_Load_CurrencyRate\Log Success"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{f9ff006e-8609-47e7-a011-13ed33c57501}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Log Success"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{975C379D-33C2-4639-9B56-44E08CFA36CC}"
+              SQLTask:SqlStatementSource="EXEC ETL.USP_LOAD_AUDIT 'STG.Sales_CurrencyRate','Watermark Append',?,'Success',?,?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::RowCount"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::MaxModifiedDateSeen"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="7"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::ServerExecutionID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="20"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_CurrencyRate.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{80f48b8e-a0e5-4535-9d74-a06d8cc7f84c}"
+          DTS:From="Package\Sequence Container_Load_CurrencyRate\GET LastRunDate"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Sequence Container_Load_CurrencyRate\AWorks Extract" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_CurrencyRate.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{857632D6-1DB9-44F9-A848-5319304CE353}"
+          DTS:From="Package\Sequence Container_Load_CurrencyRate\AWorks Extract"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Sequence Container_Load_CurrencyRate\GET MaxModifiedDate" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container_Load_CurrencyRate.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{4CA5BBE0-75B9-44C1-9094-6E0DC1E63BBB}"
+          DTS:From="Package\Sequence Container_Load_CurrencyRate\GET MaxModifiedDate"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\Sequence Container_Load_CurrencyRate\Log Success" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="155,42"
+          Id="Package\Sequence Container_Load_CurrencyRate\AWorks Extract"
+          TopLeft="46,107.5" />
+        <NodeLayout
+          Size="169,42"
+          Id="Package\Sequence Container_Load_CurrencyRate\GET LastRunDate"
+          TopLeft="5.5,5.5" />
+        <NodeLayout
+          Size="190,42"
+          Id="Package\Sequence Container_Load_CurrencyRate\GET MaxModifiedDate"
+          TopLeft="14,209.5" />
+        <NodeLayout
+          Size="142,42"
+          Id="Package\Sequence Container_Load_CurrencyRate\Log Success"
+          TopLeft="52.5,311.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_CurrencyRate.PrecedenceConstraints[Constraint]"
+          TopLeft="90,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="33.5,60"
+              Start="0,0"
+              End="33.5,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="29.5,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="29.5,30"
+                    Point2="33.5,30"
+                    Point3="33.5,34" />
+                  <mssgle:LineSegment
+                    End="33.5,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_CurrencyRate.PrecedenceConstraints[Constraint 2]"
+          TopLeft="123.5,149.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-14.5,60"
+              Start="0,0"
+              End="-14.5,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="-4,30" />
+                  <mssgle:LineSegment
+                    End="-10.5,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-10.5,30"
+                    Point2="-14.5,30"
+                    Point3="-14.5,34" />
+                  <mssgle:LineSegment
+                    End="-14.5,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_CurrencyRate.PrecedenceConstraints[Constraint 3]"
+          TopLeft="109,251.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="14.5,60"
+              Start="0,0"
+              End="14.5,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="10.5,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="10.5,30"
+                    Point2="14.5,30"
+                    Point3="14.5,34" />
+                  <mssgle:LineSegment
+                    End="14.5,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="247,409"
+          Size="247,452"
+          Id="Package\Sequence Container_Load_CurrencyRate"
+          TopLeft="5.50000000000006,5.5" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Sequence Container_Load_CurrencyRate\AWorks Extract">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="134,42"
+          Id="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG"
+          TopLeft="498,273" />
+        <NodeLayout
+          Size="160,42"
+          Id="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks"
+          TopLeft="221,84" />
+        <NodeLayout
+          Size="133,42"
+          Id="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\Row Count"
+          TopLeft="346,179" />
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_CurrencyRate\AWorks Extract.Paths[Row Count Output 1]"
+          TopLeft="412.5,221">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="152.5,52"
+              Start="0,0"
+              End="152.5,44.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22"
+                    Point2="0,26"
+                    Point3="4,26" />
+                  <mssgle:LineSegment
+                    End="148.5,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="148.5,26"
+                    Point2="152.5,26"
+                    Point3="152.5,30" />
+                  <mssgle:LineSegment
+                    End="152.5,44.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container_Load_CurrencyRate\AWorks Extract.Paths[OLE DB Source Output]"
+          TopLeft="301,126">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="111.5,53"
+              Start="0,0"
+              End="111.5,45.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.5"
+                    Point2="0,26.5"
+                    Point3="4,26.5" />
+                  <mssgle:LineSegment
+                    End="107.5,26.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="107.5,26.5"
+                    Point2="111.5,26.5"
+                    Point3="111.5,30.5" />
+                  <mssgle:LineSegment
+                    End="111.5,45.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\DWH_STG">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container_Load_CurrencyRate\AWorks Extract\AdventureWorks">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
