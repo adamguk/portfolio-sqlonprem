@@ -8,6 +8,8 @@ Example of an DWH setup limited to only on-prem Microsoft SQL Server using Trans
 
 ## 📝Notes and Limitations
 - MERGE statements purposefully avoided for known SQL bugs that still exist in SQL Server 2025 with merge operations. Instead applied seperate update and insert statements.
+- GenAi utilised to produce powershell deploy script. All other files hand authored without the use of Ai. 
+- Deployment based on seperate instances of SQL Server for storage (DWH) and integration services. 
 
 ## 📚Layered Modelling
 - **'STG'** (Staging tables aka Bronze): raw, untransformed, source data, loaded via SSIS
