@@ -8,13 +8,11 @@ IF EXISTS (SELECT job_id
     BEGIN
         EXECUTE dbo.sp_delete_job @job_name = N'Populate_Marts';
     END
-
-
 GO
+
 EXECUTE dbo.sp_add_job @job_name = N'Populate_Marts';
-
-
 GO
+
 ------------------------
 -------DIMENSIONS-------
 ------------------------
