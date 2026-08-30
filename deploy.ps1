@@ -28,7 +28,9 @@ $DeploymentSteps = @(
     @{ Name = "Mart Tables"; Path = ".\scripts\05_create_tables_mart.sql"; UseTargetDB = $true; TargetServer = "DWH" },
     @{ Name = "Procedures"; Path = ".\scripts\06_create_procedures.sql"; UseTargetDB = $true; TargetServer = "DWH" },
     @{ Name = "AgentJobs"; Path = ".\scripts\07_create_agent_jobs.sql"; UseTargetDB = $false; TargetServer = "DWH" },
-    @{ Name = "SSIS Catalog Deployment"; Path = ".\scripts\08_deploy_ssis_catalog.sql"; UseTargetDB = $false; TargetServer = "SSIS" }
+    @{ Name = "SSIS Catalog Deployment"; Path = ".\scripts\08_deploy_ssis_catalog.sql"; UseTargetDB = $false; TargetServer = "SSIS" },
+    @{ Name = "SSIS Procedures Deployment"; Path = ".\scripts\09_create_procedures_ssis.sql"; UseTargetDB = $false; TargetServer = "SSIS" },
+    @{ Name = "SSIS AgentJobs Deployment"; Path = ".\scripts\10_create_agent_jobs_ssis.sql"; UseTargetDB = $false; TargetServer = "SSIS" }
 )
 
 $DeploymentFailed = $false
