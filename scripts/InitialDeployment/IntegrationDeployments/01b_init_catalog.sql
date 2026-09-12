@@ -13,7 +13,7 @@ IF NOT EXISTS (SELECT 1
                FROM   sys.databases
                WHERE  name = 'SSISDB')
     BEGIN
-        EXECUTE catalog.create_catalog @password = N'YourStrongMasterKeyPasswordHere';
+        EXECUTE catalog.create_catalog @password = N'$(SSISCatalogPassword)';
     END
 
 

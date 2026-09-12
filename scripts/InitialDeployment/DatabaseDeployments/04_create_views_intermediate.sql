@@ -5,6 +5,19 @@ GO
 ----------------------------
 -----------PERSON-----------
 ----------------------------
+CREATE OR ALTER VIEW INT.Person_EmailAddress
+AS
+SELECT BusinessEntityID AS PersonNK,
+       EmailAddressID AS EmailNK,
+       CONCAT(BusinessEntityID, '-', EmailAddressID) AS EmailAddressCNK,
+       EmailAddress,
+       ModifiedDate,
+       ExtractDatetime,
+       RowHash
+FROM   STG.Person_EmailAddress;
+
+
+GO
 CREATE OR ALTER VIEW INT.Person_Person
 AS
 SELECT p.BusinessEntityID AS PersonNK,
@@ -71,6 +84,33 @@ FROM   STG.Person_BusinessEntityAddress;
 
 
 GO
+CREATE OR ALTER VIEW INT.Person_StateProvince
+AS
+SELECT StateProvinceID AS StateProvinceNK,
+       StateProvinceCode,
+       CountryRegionCode AS CountryRegionNK,
+       IsOnlyStateProvinceFlag,
+       IIF (IsOnlyStateProvinceFlag = 1, 'Yes', 'No') AS IsOnlyStateProvinceDescription,
+       Name AS StateProvinceName,
+       TerritoryID AS TerritoryNK,
+       ModifiedDate,
+       ExtractDatetime,
+       RowHash
+FROM   STG.Person_StateProvince;
+
+
+GO
+CREATE OR ALTER VIEW INT.Person_CountryRegion
+AS
+SELECT CountryRegionCode AS CountryRegionNK,
+       Name AS CountryRegionName,
+       ModifiedDate,
+       ExtractDatetime,
+       RowHash
+FROM   STG.Person_CountryRegion;
+
+
+GO
 CREATE OR ALTER VIEW INT.Address
 AS
 SELECT --Keys
@@ -101,46 +141,6 @@ FROM   INT.Person_Address AS a
 
 
 GO
-CREATE OR ALTER VIEW INT.Person_CountryRegion
-AS
-SELECT CountryRegionCode AS CountryRegionNK,
-       Name AS CountryRegionName,
-       ModifiedDate,
-       ExtractDatetime,
-       RowHash
-FROM   STG.Person_CountryRegion;
-
-
-GO
-CREATE OR ALTER VIEW INT.Person_EmailAddress
-AS
-SELECT BusinessEntityID AS PersonNK,
-       EmailAddressID AS EmailNK,
-       CONCAT(BusinessEntityID, '-', EmailAddressID) AS EmailAddressCNK,
-       EmailAddress,
-       ModifiedDate,
-       ExtractDatetime,
-       RowHash
-FROM   STG.Person_EmailAddress;
-
-
-GO
-CREATE OR ALTER VIEW INT.Person_StateProvince
-AS
-SELECT StateProvinceID AS StateProvinceNK,
-       StateProvinceCode,
-       CountryRegionCode AS CountryRegionNK,
-       IsOnlyStateProvinceFlag,
-       IIF (IsOnlyStateProvinceFlag = 1, 'Yes', 'No') AS IsOnlyStateProvinceDescription,
-       Name AS StateProvinceName,
-       TerritoryID AS TerritoryNK,
-       ModifiedDate,
-       ExtractDatetime,
-       RowHash
-FROM   STG.Person_StateProvince;
-
-
-GO
 CREATE OR ALTER VIEW INT.Person_Address_Joined
 AS
 SELECT CONCAT(p.PersonNK, '|', a.PersonAddressNK, '|', t.PersonAddressTypeNK) AS PersonAddressCNK,
@@ -161,7 +161,7 @@ SELECT CONCAT(p.PersonNK, '|', a.PersonAddressNK, '|', t.PersonAddressTypeNK) AS
        sp.IsOnlyStateProvinceFlag,
        sp.IsOnlyStateProvinceDescription,
        --TYPE 2 (versioned) tracked attributes
-       HASHBYTES('SHA2_256', CONCAT_WS('|', COALESCE (a.AddressLine1, ''), COALESCE (a.AddressLine2, ''), COALESCE (a.City, ''), COALESCE (a.PostalCode, ''), COALESCE (t.AddressTypeName, ''), COALESCE (cr.CountryRegionName, ''), COALESCE (sp.StateProvinceCode, ''))) AS NewRowHash
+       HASHBYTES('SHA2_256', CONCAT_WS('|', COALESCE (a.AddressLine1, ''), COALESCE (a.AddressLine2, ''), COALESCE (a.City, ''), COALESCE (a.PostalCode, ''), COALESCE (t.AddressTypeName, ''), COALESCE (cr.CountryRegionName, ''), COALESCE (sp.StateProvinceCode, ''))) AS RowHash
 FROM   INT.Person_Person AS p
        INNER JOIN
        INT.Person_BusinessEntityAddress AS bea
@@ -267,7 +267,7 @@ SELECT [SalesOrderID] AS SalesOrderNK,
        [UnitPriceDiscount],
        [LineTotal],
        [ModifiedDate],
-       [ExtractDatetime] AS SalesOrderDetailExtractedDateTime,
+       [ExtractDatetime] AS SalesOrderDetailExtractDateTime,
        [RowHash] AS SalesOrderDetailHash
 FROM   STG.Sales_SalesOrderDetail;
 
@@ -302,7 +302,7 @@ SELECT [SalesOrderID] AS SalesOrderNK,
        [TotalDue],
        [Comment],
        [ModifiedDate],
-       [ExtractDatetime] AS SalesOrderHeaderExtractedDateTime,
+       [ExtractDatetime] AS SalesOrderHeaderExtractDateTime,
        [RowHash] AS SalesOrderHeaderHash
 FROM   STG.Sales_SalesOrderHeader;
 
@@ -545,8 +545,8 @@ SELECT --Keys
        --Metadata
        h.ModifiedDate AS HeaderLastModifiedDate,
        d.ModifiedDate AS DetailLastModifiedDate,
-       h.SalesOrderHeaderExtractedDateTime,
-       d.SalesOrderDetailExtractedDateTime,
+       h.SalesOrderHeaderExtractDateTime,
+       d.SalesOrderDetailExtractDateTime,
        h.SalesOrderHeaderHash,
        d.SalesOrderDetailHash,
        --Change detection

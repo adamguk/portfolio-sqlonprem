@@ -11,8 +11,9 @@
   DTS:LocaleID="2057"
   DTS:ObjectName="Load_Append_Tables"
   DTS:PackageType="5"
-  DTS:VersionBuild="17"
-  DTS:VersionGUID="{E1A76C40-AD06-4E52-872A-6EBD84C97298}">
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="18"
+  DTS:VersionGUID="{E61E348E-B92B-4236-A640-2681AB4FD1C3}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -28,8 +29,7 @@
           DTS:ConnectionString="Data Source=192.168.50.185,1434;User ID=sa;Initial Catalog=AdventureWorks2022;Provider=MSOLEDBSQL.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-Package-{FB749529-48C3-4167-B41E-2E38B243C7EC}192.168.50.185,1434.sa;">
           <DTS:Password
             DTS:Name="Password"
-            Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAjsRJWi1dk6PvqsC5RbLxgAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAAhaSFQX3d1buHs29meh5qLLDV2Et+kHYIeIS6EyQVd7AAAAAAOgAAAAAIAACAAAACFQPEUhTTbFyNhr0H7QulzMuxcLS3AdzbjmT7s1XQKKTAAAAB4orFv+jgvKWr0HnqBy2kdVyEhmc1nha3oJtBn/F9R6XQnLEM4NXt887KUaGazQipAAAAAD/ve33riTUxXxU79jCxNqKv8IQQtus5vMLg+XNld9eS4gfloSuMmmq17MQ8R1LckZQXrxiiOQtO5MuM7bWcoSw</DTS:Password>
+            Sensitive="1"></DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -45,8 +45,7 @@
           DTS:ConnectionString="Data Source=192.168.50.185,1433;User ID=sa;Initial Catalog=DWH_ONPREM;Provider=MSOLEDBSQL.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-Package-{975C379D-33C2-4639-9B56-44E08CFA36CC}192.168.50.185,1433.DWH_ONPREM.sa;">
           <DTS:Password
             DTS:Name="Password"
-            Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAjsRJWi1dk6PvqsC5RbLxgAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACDeNKsXYJuLw/GCs5AmaBeJTaDtqfxrZvxDuQcaGFlMAAAAAAOgAAAAAIAACAAAAC/atHbOxyeSWS5pGNzEtFtrc238i4obxqpI3eYw7zrtjAAAAAHVVGwwQejderqF39buDUMqBWsmMo+ArPuU4A7LBLe29/t8GLgm6PWozvsTciulbZAAAAAfnOdYN6tRIOTYS4XHh4UlKVPp7h8JKCqg42wTvkXDaLWH7/nbyA++KjcJwucZNx2G+G1bNl/9dUngYgaCZKhXQ</DTS:Password>
+            Sensitive="1"></DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>

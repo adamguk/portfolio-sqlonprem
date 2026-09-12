@@ -8,11 +8,13 @@ IF EXISTS (SELECT job_id
     BEGIN
         EXECUTE dbo.sp_delete_job @job_name = N'Populate_Marts';
     END
-GO
 
+
+GO
 EXECUTE dbo.sp_add_job @job_name = N'Populate_Marts';
-GO
 
+
+GO
 ------------------------
 -------DIMENSIONS-------
 ------------------------
@@ -67,7 +69,7 @@ GO
 ------------------------
 ---------FACTS----------
 ------------------------
-EXECUTE sp_add_jobstep @job_name = N'Populate_Marts', @database_name = N'DWH_ONPREM', @step_name = N'Populate MRT.FCT_Sales', @subsystem = N'TSQL', @command = N'EXEC MRT.USP_LOAD_FACT_SALES', @retry_attempts = 3, @retry_interval = 5, @on_success_action = 3, @on_fail_action = 2, @flags = 6;
+EXECUTE sp_add_jobstep @job_name = N'Populate_Marts', @database_name = N'DWH_ONPREM', @step_name = N'Populate MRT.FCT_Sales', @subsystem = N'TSQL', @command = N'EXEC MRT.USP_LOAD_FACT_SALES', @retry_attempts = 3, @retry_interval = 5, @on_success_action = 1, @on_fail_action = 2, @flags = 6;
 
 
 GO

@@ -8,6 +8,6 @@ IF OBJECT_ID(N'ETL.LoadAudit', N'U') IS NULL
             [ExecutionID]         BIGINT         NULL,
             [LoggedAtUTC]         DATETIME2 (7)  DEFAULT GETUTCDATE() NOT NULL,
             [Status]              NVARCHAR (20)  NOT NULL, -- 'Success', 'Failure'
-            [MaxModifiedDateSeen] DATETIME2      DEFAULT '1900-01-01' NOT NULL
+            [MaxModifiedDateSeen] DATETIME2      NULL
         );
     END

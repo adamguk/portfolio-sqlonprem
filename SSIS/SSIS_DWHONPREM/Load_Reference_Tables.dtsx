@@ -11,8 +11,9 @@
   DTS:LocaleID="2057"
   DTS:ObjectName="Package"
   DTS:PackageType="5"
-  DTS:VersionBuild="52"
-  DTS:VersionGUID="{0366DD85-C1A6-4596-9DEC-1BDB3D9DF4ED}">
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="53"
+  DTS:VersionGUID="{94D60FF6-E189-4D9C-98FB-B11B8FC63AAA}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -28,8 +29,7 @@
           DTS:ConnectionString="Data Source=192.168.50.185,1434;User ID=sa;Initial Catalog=AdventureWorks2022;Provider=MSOLEDBSQL.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-Package-{FB749529-48C3-4167-B41E-2E38B243C7EC}192.168.50.185,1434.sa;">
           <DTS:Password
             DTS:Name="Password"
-            Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAjsRJWi1dk6PvqsC5RbLxgAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAArm0X3y0SIKVUidKsvk2T1ZgjV9iUApTLF8wiYVGNAnAAAAAAOgAAAAAIAACAAAAAaRicFFh8uddr0RD+yVPBI2U0BUz1APJA6iAKfajtkDjAAAAB6RJKU11nINu5Pn7CiO891ioHe83Zkl1+qKGZA9bDLyRNu95eB/0s7N7M+rIABQQJAAAAAfTx2V5ed473ORpTb9d2losZqyZ5s/4XZu7prFshjJ/iG1eLlWlOU3ev5N6XJLVk+NEtu25kXapCL+FGqAeNZ9A</DTS:Password>
+            Sensitive="1"></DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -45,8 +45,7 @@
           DTS:ConnectionString="Data Source=192.168.50.185,1433;User ID=sa;Initial Catalog=DWH_ONPREM;Provider=MSOLEDBSQL.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-Package-{975C379D-33C2-4639-9B56-44E08CFA36CC}192.168.50.185,1433.DWH_ONPREM.sa;">
           <DTS:Password
             DTS:Name="Password"
-            Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAAjsRJWi1dk6PvqsC5RbLxgAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAABALUc+VdNzKZ6FXpFnAyu4zHUAgVWkSkdAms3/SYt9xQAAAAAOgAAAAAIAACAAAAApainXDavcielM8eSEC1DYC39pO7QKS7+/G/I5LOYBcDAAAADUM3i6S5d54+kqd5wIdQGbmIi9Sv9Lvz11pcyZrej1DCZi6F8OlQzYZ4oAtQ0XQzpAAAAAOq6xRjl9LTk/aGNoHCNcE9Ka8kObuwfMMSSS1JIGggvvq2O/qpOBl365Oq7+gvRGu+P0onZs6JI7rrxbm0U3Jg</DTS:Password>
+            Sensitive="1"></DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -623,7 +622,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Log Failure"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -647,7 +646,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Log Success"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -678,7 +677,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Raise Error"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1130,7 +1129,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Log Failure"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1154,7 +1153,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Log Success"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1185,7 +1184,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Raise Error"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -6705,7 +6704,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Log Failure"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -6729,7 +6728,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Log Success"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -6760,7 +6759,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Raise Error"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData

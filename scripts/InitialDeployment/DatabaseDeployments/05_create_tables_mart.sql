@@ -30,6 +30,7 @@ IF OBJECT_ID(N'MRT.DIM_Person', N'U') IS NULL
             [ValidFrom]                DATETIME2 (7)  NOT NULL,
             [ValidTo]                  DATETIME2 (7)  NULL,
             [Valid]                    BIT            DEFAULT 1 NOT NULL,
+            [ValidityContext]          NVARCHAR (25)  NULL,
             [RowHash]                  VARBINARY (32) NULL
         );
         --Index fields used for time-agnostic joins
@@ -52,9 +53,10 @@ IF NOT EXISTS (SELECT 1
             PersonNK,
             ValidFrom,
             Valid,
+            ExtractDateTime,
             RowHash
         )
-        VALUES                     (-1, -1, '1900-01-01', 1, HASHBYTES('SHA2_256', 'FallbackEntityRow'));
+        VALUES                     (-1, -1, '1900-01-01', 1, '1900-01-01', HASHBYTES('SHA2_256', 'FallbackEntityRow'));
         SET IDENTITY_INSERT MRT.DIM_Person OFF;
     END
 
@@ -90,6 +92,7 @@ IF OBJECT_ID(N'MRT.DIM_Person_Address', N'U') IS NULL
             [ValidFrom]                      DATETIME2 (7)  NOT NULL,
             [ValidTo]                        DATETIME2 (7)  NULL,
             [Valid]                          BIT            DEFAULT 1 NOT NULL,
+            [ValidityContext]                NVARCHAR (25)  NULL,
             [RowHash]                        VARBINARY (32) NULL
         );
         --Index fields used for time-agnostic joins
@@ -162,7 +165,8 @@ IF OBJECT_ID(N'MRT.DIM_Product', N'U') IS NULL
             RowHash                  VARBINARY (32) NULL,
             ValidFrom                DATETIME2      NOT NULL,
             ValidTo                  DATETIME2      NULL,
-            Valid                    BIT            DEFAULT 1
+            Valid                    BIT            DEFAULT 1,
+            [ValidityContext]        NVARCHAR (25)  NULL
         );
         --Index fields used for time-agnostic joins
         CREATE NONCLUSTERED INDEX IX_DIM_Product_ProductNK_Valid
@@ -174,6 +178,53 @@ IF OBJECT_ID(N'MRT.DIM_Product', N'U') IS NULL
 
 
 GO
+IF NOT EXISTS (SELECT 1
+               FROM   MRT.DIM_Product
+               WHERE  ProductSK = -1)
+    BEGIN
+        SET IDENTITY_INSERT MRT.DIM_Product ON;
+        INSERT  INTO MRT.DIM_Product (
+            ProductSK,
+            ProductNK,
+            ProductName,
+            ProductNumber,
+            MakeFlag,
+            MakeFlagDescription,
+            FinishedGoodsFlag,
+            FinishedGoodsDescription,
+            Color,
+            SafetyStockLevel,
+            ReorderPoint,
+            StandardCost,
+            ListPrice,
+            Size,
+            SizeUnitMeasureCodeNK,
+            WeightUnitMeasureCodeNK,
+            Weight,
+            DaysToManufacture,
+            ProductLine,
+            Class,
+            Style,
+            ProductCategoryNK,
+            ProductCategoryName,
+            ProductSubcategoryNK,
+            ProductSubCategoryName,
+            ProductModelNK,
+            ProductModelName,
+            SellStartDate,
+            SellEndDate,
+            DiscontinuedDate,
+            ModifiedDate,
+            ExtractDatetime,
+            RowHash,
+            ValidFrom,
+            ValidTo,
+            Valid
+        )
+        VALUES                      (-1, -1, 'NA', 'NA', NULL, 'NA', NULL, 'NA', 'NA', NULL, NULL, NULL, NULL, 'NA', 'NA', 'NA', NULL, NULL, 'NA', 'NA', 'NA', -1, 'NA', -1, 'NA', -1, 'NA', '1900-01-01', NULL, NULL, NULL, '1900-01-01', HASHBYTES('SHA2_256', 'FallbackEntityRow'), '1900-01-01', NULL, 1);
+        SET IDENTITY_INSERT MRT.DIM_Product OFF;
+    END
+
 IF OBJECT_ID(N'MRT.DIM_Address', N'U') IS NULL
     BEGIN
         CREATE TABLE MRT.DIM_Address (
@@ -232,74 +283,26 @@ IF NOT EXISTS (SELECT 1
 
 
 GO
-IF NOT EXISTS (SELECT 1
-               FROM   MRT.DIM_Product
-               WHERE  ProductSK = -1)
-    BEGIN
-        SET IDENTITY_INSERT MRT.DIM_Product ON;
-        INSERT  INTO MRT.DIM_Product (
-            ProductSK,
-            ProductNK,
-            ProductName,
-            ProductNumber,
-            MakeFlag,
-            MakeFlagDescription,
-            FinishedGoodsFlag,
-            FinishedGoodsDescription,
-            Color,
-            SafetyStockLevel,
-            ReorderPoint,
-            StandardCost,
-            ListPrice,
-            Size,
-            SizeUnitMeasureCodeNK,
-            WeightUnitMeasureCodeNK,
-            Weight,
-            DaysToManufacture,
-            ProductLine,
-            Class,
-            Style,
-            ProductCategoryNK,
-            ProductCategoryName,
-            ProductSubcategoryNK,
-            ProductSubCategoryName,
-            ProductModelNK,
-            ProductModelName,
-            SellStartDate,
-            SellEndDate,
-            DiscontinuedDate,
-            ModifiedDate,
-            ExtractDatetime,
-            RowHash,
-            ValidFrom,
-            ValidTo,
-            Valid
-        )
-        VALUES                      (-1, -1, 'NA', 'NA', NULL, 'NA', NULL, 'NA', 'NA', NULL, NULL, NULL, NULL, 'NA', 'NA', 'NA', NULL, NULL, 'NA', 'NA', 'NA', -1, 'NA', -1, 'NA', -1, 'NA', '1900-01-01', NULL, NULL, NULL, '1900-01-01', HASHBYTES('SHA2_256', 'FallbackEntityRow'), '1900-01-01', NULL, 1);
-        SET IDENTITY_INSERT MRT.DIM_Product OFF;
-    END
-
-
-GO
 IF OBJECT_ID(N'MRT.DIM_ShipMethod', N'U') IS NULL
     BEGIN
         CREATE TABLE MRT.DIM_ShipMethod (
             --Keys
-            [ShipMethodSK]   INT            IDENTITY (1, 1) PRIMARY KEY,
-            [ShipMethodNK]   INT            NOT NULL,
+            [ShipMethodSK]    INT            IDENTITY (1, 1) PRIMARY KEY,
+            [ShipMethodNK]    INT            NOT NULL,
             --SCD-T2 Tracked
-            [ShipMethodName] NVARCHAR (50)  NOT NULL,
-            [ShipBase]       MONEY          NULL,
-            [ShipRate]       MONEY          NULL,
+            [ShipMethodName]  NVARCHAR (50)  NOT NULL,
+            [ShipBase]        MONEY          NULL,
+            [ShipRate]        MONEY          NULL,
             --Metadata
-            [ModifiedDate]   DATETIME2      NULL,
-            ExtractDatetime  DATETIME2      DEFAULT GETDATE() NULL,
+            [ModifiedDate]    DATETIME2      NULL,
+            ExtractDatetime   DATETIME2      DEFAULT GETDATE() NULL,
             --Change detection
-            RowHash          VARBINARY (32) NULL,
+            RowHash           VARBINARY (32) NULL,
             --Tracking
-            ValidFrom        DATETIME2 (7)  NOT NULL,
-            ValidTo          DATETIME2 (7)  NULL,
-            Valid            BIT            DEFAULT 1 NOT NULL
+            ValidFrom         DATETIME2 (7)  NOT NULL,
+            ValidTo           DATETIME2 (7)  NULL,
+            Valid             BIT            DEFAULT 1 NOT NULL,
+            [ValidityContext] NVARCHAR (25)  NULL
         );
         --Index fields used for time-agnostic joins
         CREATE NONCLUSTERED INDEX IX_DIM_ShipMethod_ShipMethodNK_Valid
@@ -356,7 +359,8 @@ IF OBJECT_ID(N'MRT.DIM_SalesPerson', N'U') IS NULL
             --Tracking
             [ValidFrom]            DATETIME2      NOT NULL,
             [ValidTo]              DATETIME2      NULL,
-            [Valid]                BIT            DEFAULT 1
+            [Valid]                BIT            DEFAULT 1,
+            [ValidityContext]      NVARCHAR (25)  NULL
         );
         --Index fields used for time-agnostic joins
         CREATE NONCLUSTERED INDEX IX_DIM_SalesPerson_SalesPersonNK_Valid
@@ -406,7 +410,8 @@ IF OBJECT_ID(N'MRT.DIM_CreditCard', N'U') IS NULL
             [ExpYear]         SMALLINT       NULL,
             [ModifiedDate]    DATETIME2      NULL,
             [ExtractDatetime] DATETIME2      DEFAULT GETDATE() NULL,
-            [RowHash]         VARBINARY (32) NULL
+            [RowHash]         VARBINARY (32) NULL,
+            [Valid]           BIT            DEFAULT 1 NOT NULL
         );
         CREATE NONCLUSTERED INDEX IX_DIM_CREDITCARD_CREDITCARDNK
             ON MRT.DIM_CreditCard(CreditCardNK);
@@ -428,9 +433,10 @@ IF NOT EXISTS (SELECT 1
             [ExpYear],
             [ModifiedDate],
             [ExtractDatetime],
-            [RowHash]
+            [RowHash],
+            [Valid]
         )
-        VALUES                         (-1, -1, 'NA', 'NA', NULL, NULL, '1900-01-01', '1900-01-01', HASHBYTES('SHA2_256', 'FallbackEntityRow'));
+        VALUES                         (-1, -1, 'NA', 'NA', NULL, NULL, '1900-01-01', '1900-01-01', HASHBYTES('SHA2_256', 'FallbackEntityRow'), 1);
         SET IDENTITY_INSERT MRT.DIM_CreditCard OFF;
     END
 
@@ -512,7 +518,8 @@ IF OBJECT_ID(N'MRT.DIM_SpecialOffer', N'U') IS NULL
             --Tracking
             [ValidFrom]          DATETIME2      NOT NULL,
             [ValidTo]            DATETIME2      NULL,
-            [Valid]              BIT            DEFAULT 1 NOT NULL
+            [Valid]              BIT            DEFAULT 1 NOT NULL,
+            [ValidityContext]    NVARCHAR (25)  NULL
         );
         CREATE NONCLUSTERED INDEX IX_DIM_SpecialOffer_SpecialOfferNK_Valid
             ON MRT.DIM_SpecialOffer(SpecialOfferNK, Valid);
@@ -575,7 +582,8 @@ IF OBJECT_ID(N'MRT.DIM_Store', N'U') IS NULL
             --Tracking
             [ValidFrom]       DATETIME2 (7)  NOT NULL,
             [ValidTo]         DATETIME2 (7)  NULL,
-            [Valid]           BIT            DEFAULT 1 NOT NULL
+            [Valid]           BIT            DEFAULT 1 NOT NULL,
+            [ValidityContext] NVARCHAR (25)  NULL
         );
         --Index fields used for time-agnostic joins
         CREATE NONCLUSTERED INDEX IX_DIM_Store_StoreNK_Valid
@@ -639,7 +647,8 @@ IF OBJECT_ID(N'MRT.DIM_Territory', N'U') IS NULL
             --Tracking
             [ValidFrom]         DATETIME2      NOT NULL,
             [ValidTo]           DATETIME2      NULL,
-            [Valid]             BIT            DEFAULT 1 NOT NULL
+            [Valid]             BIT            DEFAULT 1 NOT NULL,
+            [ValidityContext]   NVARCHAR (25)  NULL
         );
         --Index fields used for time-agnostic joins
         CREATE NONCLUSTERED INDEX IX_DIM_Territory_TerritoryNK_Valid
@@ -703,7 +712,8 @@ IF OBJECT_ID(N'MRT.DIM_Customer', N'U') IS NULL
             [RowHash]                         VARBINARY (32) NOT NULL,
             [ValidFrom]                       DATETIME2 (7)  NOT NULL,
             [ValidTo]                         DATETIME2 (7)  NULL,
-            [Valid]                           BIT            DEFAULT 1 NOT NULL
+            [Valid]                           BIT            DEFAULT 1 NOT NULL,
+            [ValidityContext]                 NVARCHAR (25)  NULL
         );
         --Index fields used for time-agnostic joins
         CREATE NONCLUSTERED INDEX IX_DIM_Customer_CustomerNK_Valid
