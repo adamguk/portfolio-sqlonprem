@@ -78,29 +78,31 @@ BEGIN
                      Valid,
                      RowHash
               )
-              SELECT p.PersonNK,
-                     p.PersonType,
-                     p.PersonTypeDescription,
-                     p.PersonTypeGroup,
-                     p.Title,
-                     p.FirstName,
-                     p.MiddleName,
-                     p.LastName,
-                     p.Suffix,
-                     p.FullName,
-                     p.EmailAddress,
-                     p.EmailPromotionSignUpFlag,
-                     p.EmailPromotionSignUp,
-                     p.ModifiedDate,
-                     p.ExtractDatetime,
-                     @ExecutionTime AS ValidFrom,
+              SELECT new.PersonNK,
+                     new.PersonType,
+                     new.PersonTypeDescription,
+                     new.PersonTypeGroup,
+                     new.Title,
+                     new.FirstName,
+                     new.MiddleName,
+                     new.LastName,
+                     new.Suffix,
+                     new.FullName,
+                     new.EmailAddress,
+                     new.EmailPromotionSignUpFlag,
+                     new.EmailPromotionSignUp,
+                     new.ModifiedDate,
+                     new.ExtractDatetime,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.DIM_Person AS hist
+                                       WHERE  hist.PersonNK = new.PersonNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom,
                      NULL AS ValidTo,
                      1 AS Valid,
-                     p.RowHash
-              FROM   INT.Person_Person AS p
+                     new.RowHash
+              FROM   INT.Person_Person AS new
                      LEFT OUTER JOIN
                      MRT.DIM_Person AS dim
-                     ON p.PersonNK = dim.PersonNK
+                     ON new.PersonNK = dim.PersonNK
                         AND dim.Valid = 1
               WHERE  dim.PersonSK IS NULL;
               COMMIT TRANSACTION;
@@ -169,31 +171,33 @@ BEGIN
                      Valid,
                      RowHash
               )
-              SELECT pj.PersonNK,
-                     pj.PersonAddressCNK,
-                     pj.PersonAddressTypeNK,
-                     pj.PersonAddressNK,
-                     pj.CountryRegionNK,
-                     pj.StateProvinceNK,
-                     pj.AddressLine1,
-                     pj.AddressLine2,
-                     pj.City,
-                     pj.PostalCode,
-                     pj.SpatialLocation,
-                     pj.AddressTypeName,
-                     pj.CountryRegionName,
-                     pj.StateProvinceCode,
-                     pj.StateProvinceName,
-                     pj.IsOnlyStateProvinceFlag,
-                     pj.IsOnlyStateProvinceDescription,
-                     @ExecutionTime AS ValidFrom,
+              SELECT new.PersonNK,
+                     new.PersonAddressCNK,
+                     new.PersonAddressTypeNK,
+                     new.PersonAddressNK,
+                     new.CountryRegionNK,
+                     new.StateProvinceNK,
+                     new.AddressLine1,
+                     new.AddressLine2,
+                     new.City,
+                     new.PostalCode,
+                     new.SpatialLocation,
+                     new.AddressTypeName,
+                     new.CountryRegionName,
+                     new.StateProvinceCode,
+                     new.StateProvinceName,
+                     new.IsOnlyStateProvinceFlag,
+                     new.IsOnlyStateProvinceDescription,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.DIM_Person_Address AS hist
+                                       WHERE  hist.PersonAddressCNK = new.PersonAddressCNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom,
                      NULL AS ValidTo,
                      1 AS Valid,
-                     pj.RowHash
-              FROM   INT.Person_Address_Joined AS pj
+                     new.RowHash
+              FROM   INT.Person_Address_Joined AS new
                      LEFT OUTER JOIN
                      MRT.DIM_Person_Address AS dim
-                     ON pj.PersonAddressCNK = dim.PersonAddressCNK
+                     ON new.PersonAddressCNK = dim.PersonAddressCNK
                         AND dim.Valid = 1
               WHERE  dim.PersonAddressSK IS NULL;
               COMMIT TRANSACTION;
@@ -383,7 +387,10 @@ BEGIN
                      new.ModifiedDate,
                      new.ExtractDatetime,
                      new.RowHash,
-                     @ExecutionTime AS ValidFrom,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.Dim_Product AS hist
+                                       WHERE  hist.ProductNK = new.ProductNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom, -- a prior version exists (even if expired) → this is a real change
+                     -- never existed before → backdate to cover history
                      NULL AS ValidTo,
                      1 AS Valid
               FROM   INT.Production_Product AS new
@@ -467,7 +474,9 @@ BEGIN
                      new.[ModifiedDate],
                      new.[ExtractDatetime],
                      new.[RowHash],
-                     @ExecutionTime AS ValidFrom,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.DIM_ShipMethod AS hist
+                                       WHERE  hist.ShipMethodNK = new.ShipMethodNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom,
                      NULL AS ValidTo,
                      1 AS Valid
               FROM   INT.Purchasing_ShipMethod AS new
@@ -678,7 +687,9 @@ BEGIN
                      new.ModifiedDate,
                      new.ExtractDatetime,
                      new.RowHash,
-                     @ExecutionTime AS ValidFrom,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.DIM_SalesPerson AS hist
+                                       WHERE  hist.SalesPersonNK = new.SalesPersonNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom,
                      NULL AS ValidTo,
                      1 AS Valid
               FROM   INT.SalesPerson AS new
@@ -772,7 +783,9 @@ BEGIN
                      new.ModifiedDate,
                      new.ExtractDatetime,
                      new.RowHash,
-                     @ExecutionTime AS ValidFrom,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.DIM_SpecialOffer AS hist
+                                       WHERE  hist.SpecialOfferNK = new.SpecialOfferNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom,
                      NULL AS ValidTo,
                      1 AS Valid
               FROM   INT.Sales_SpecialOffer AS new
@@ -852,7 +865,9 @@ BEGIN
                      new.ModifiedDate,
                      new.ExtractDatetime,
                      new.RowHash,
-                     @ExecutionTime AS ValidFrom,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.DIM_Store AS hist
+                                       WHERE  hist.StoreNK = new.StoreNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom,
                      NULL AS ValidTo,
                      1 AS Valid
               FROM   INT.Sales_Store AS new
@@ -946,7 +961,9 @@ BEGIN
                      new.ModifiedDate,
                      new.ExtractDatetime,
                      new.RowHash,
-                     @ExecutionTime AS ValidFrom,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.DIM_Territory AS hist
+                                       WHERE  hist.TerritoryNK = new.TerritoryNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom,
                      NULL AS ValidTo,
                      1 AS Valid
               FROM   INT.Sales_Territory AS new
@@ -1033,43 +1050,45 @@ BEGIN
                      ValidTo,
                      Valid
               )
-              SELECT c.CustomerNK,
+              SELECT new.CustomerNK,
                      p.PersonSK,
                      s.StoreSK,
                      t.TerritorySK,
-                     c.AccountNumber,
-                     c.CustomerType,
-                     c.StoreName,
-                     c.Store_AnnualRevenue,
-                     c.Store_AnnualSales,
-                     c.Store_BusinessType,
-                     c.Store_Specialty,
-                     c.Store_YearOpened,
-                     c.Store_EmployeeCount,
-                     c.PersonTypeDescription,
-                     c.Individual_FullName,
-                     c.Individual_EmailAddress,
-                     c.Individual_EmailPromotionSignUp,
-                     c.RowHash,
-                     @ExecutionTime AS ValidFrom,
+                     new.AccountNumber,
+                     new.CustomerType,
+                     new.StoreName,
+                     new.Store_AnnualRevenue,
+                     new.Store_AnnualSales,
+                     new.Store_BusinessType,
+                     new.Store_Specialty,
+                     new.Store_YearOpened,
+                     new.Store_EmployeeCount,
+                     new.PersonTypeDescription,
+                     new.Individual_FullName,
+                     new.Individual_EmailAddress,
+                     new.Individual_EmailPromotionSignUp,
+                     new.RowHash,
+                     CASE WHEN EXISTS (SELECT 1
+                                       FROM   MRT.DIM_Customer AS hist
+                                       WHERE  hist.CustomerNK = new.CustomerNK) THEN @ExecutionTime ELSE '1900-01-01' END AS ValidFrom,
                      NULL AS ValidTo,
                      1 AS Valid
-              FROM   INT.Sales_Customer AS c
+              FROM   INT.Sales_Customer AS new
                      LEFT OUTER JOIN
                      MRT.DIM_Customer AS dim
-                     ON c.CustomerNK = dim.CustomerNK
+                     ON new.CustomerNK = dim.CustomerNK
                         AND dim.Valid = 1
                      LEFT OUTER JOIN
                      MRT.DIM_Store AS s
-                     ON c.StoreNK = s.StoreNK
+                     ON new.StoreNK = s.StoreNK
                         AND s.Valid = 1
                      LEFT OUTER JOIN
                      MRT.DIM_Territory AS t
-                     ON c.TerritoryNK = t.TerritoryNK
+                     ON new.TerritoryNK = t.TerritoryNK
                         AND t.Valid = 1
                      LEFT OUTER JOIN
                      MRT.DIM_Person AS p
-                     ON c.PersonNK = p.PersonNK
+                     ON new.PersonNK = p.PersonNK
                         AND p.Valid = 1
               WHERE  dim.CustomerSK IS NULL;
               COMMIT TRANSACTION;
