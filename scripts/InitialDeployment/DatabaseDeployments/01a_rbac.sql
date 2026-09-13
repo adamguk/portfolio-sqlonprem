@@ -91,3 +91,6 @@ GO
 --Analysts just access to marts
 GRANT SELECT
     ON SCHEMA::MRT TO bianalyst;
+
+GRANT SELECT
+    ON SCHEMA::RPT TO bianalyst;
