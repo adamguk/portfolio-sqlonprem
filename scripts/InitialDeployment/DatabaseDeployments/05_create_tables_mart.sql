@@ -344,7 +344,8 @@ IF OBJECT_ID(N'MRT.DIM_SalesPerson', N'U') IS NULL
             --Keys
             [SalesPersonSK]        INT            IDENTITY (1, 1) PRIMARY KEY,
             [SalesPersonNK]        INT            NOT NULL,
-            [TerritoryNK]          INT            NULL,
+            [PersonSK]             INT            NULL,
+            [TerritorySK]          INT            NULL,
             --SCD-T1
             [SalesQuota]           MONEY          NULL,
             [Bonus]                MONEY          NULL,
@@ -380,7 +381,8 @@ IF NOT EXISTS (SELECT 1
         INSERT  INTO MRT.DIM_SalesPerson (
             SalesPersonSK,
             SalesPersonNK,
-            TerritoryNK,
+            PersonSK,
+            TerritorySK,
             SalesQuota,
             Bonus,
             CommissionPercentage,
@@ -393,7 +395,7 @@ IF NOT EXISTS (SELECT 1
             ValidTo,
             Valid
         )
-        VALUES                          (-1, -1, -1, 0, 0, 0, 0, 0, '1900-01-01', '1900-01-01', HASHBYTES('SHA2_256', 'FallbackEntityRow'), '1900-01-01', NULL, 1);
+        VALUES                          (-1, -1, -1, -1, 0, 0, 0, 0, 0, '1900-01-01', '1900-01-01', HASHBYTES('SHA2_256', 'FallbackEntityRow'), '1900-01-01', NULL, 1);
         SET IDENTITY_INSERT MRT.DIM_SalesPerson OFF;
     END
 

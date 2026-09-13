@@ -664,7 +664,8 @@ BEGIN
               --Insert new or updated SCD-T2 records
               INSERT INTO MRT.DIM_SalesPerson (
                      SalesPersonNK,
-                     TerritoryNK,
+                     PersonSK,
+                     TerritorySK,
                      SalesQuota,
                      Bonus,
                      CommissionPercentage,
@@ -678,7 +679,8 @@ BEGIN
                      Valid
               )
               SELECT new.SalesPersonNK,
-                     new.TerritoryNK,
+                     p.PersonSK,
+                     t.TerritorySK,
                      new.SalesQuota,
                      new.Bonus,
                      new.CommissionPercentage,
@@ -697,6 +699,18 @@ BEGIN
                      MRT.DIM_SalesPerson AS dim
                      ON dim.SalesPersonNK = new.SalesPersonNK
                         AND dim.Valid = 1
+                     LEFT OUTER JOIN
+                     MRT.Dim_Person AS p
+                     ON new.SalesPersonNK = p.PersonNK
+                        AND new.ModifiedDate >= p.ValidFrom
+                        AND (new.ModifiedDate < p.ValidTo
+                             OR p.ValidTo IS NULL)
+                     LEFT OUTER JOIN
+                     MRT.Dim_Territory AS t
+                     ON new.TerritoryNK = t.TerritoryNK
+                        AND new.ModifiedDate >= t.ValidFrom
+                        AND (new.ModifiedDate < t.ValidTo
+                             OR t.ValidTo IS NULL)
               WHERE  dim.SalesPersonSK IS NULL;
               --Update existing valid rows for type 1 fields
               UPDATE dim
